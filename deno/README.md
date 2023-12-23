@@ -70,5 +70,5 @@
 7. Поменяйте ВАШЕ_НАЗВАНИЕ_ПРОЕКТА на ваше название название проекта из Deno
    Deploy и пропишите эту команду:
    ```
-   deployctl deploy --project=ВАШЕ_НАЗВАНИЕ_ПРОЕКТА --prod server.ts
+   deployctl deploy --project=ВАШЕ_НАЗВАНИЕ_ПРОЕКТА --prod deno/index.js
    ```
