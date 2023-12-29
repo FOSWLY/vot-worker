@@ -72,3 +72,16 @@
    ```
    deployctl deploy --project=ВАШЕ_НАЗВАНИЕ_ПРОЕКТА --prod deno/index.js
    ```
+
+## Деплой на Render.com
+
+1. Зайдите на [сайт](https://render.com/) и авторизуйтесь через Github
+2. Создайте новый проект "Web Service"
+3. Выберите "Build and deploy from a Git repository"
+4. Введите ссылку на этот репозиторий или используйте свой форкнутый репозиторий
+5. В "Root Directory" впишите `deno`
+6. В "Build Command" введите `curl -fsSL https://deno.land/install.sh | sh`
+7. В "Start command" введите `export PATH="$DENO_INSTALL/bin:$PATH" && deno run --allow-net index.js`
+8. В "Instance Type" выберите тип `Free`
+9. В "Environment Variables" в поле "NAME_OR_VARIABLE" введите `DENO_INSTALL`, а в поле "value" введите `/opt/render/project/.deno`
+10. Нажмите "Create Web Service"

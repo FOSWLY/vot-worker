@@ -7,7 +7,7 @@ const videoTranslationRouter = new Router()
   .post("/translate", async (ctx) => {
     const [body, headers] = await validateJSONRequest(ctx);
     if (!body || !headers) {
-      return;
+      return errorResponse(ctx, "error-content");
     }
 
     // if the value is different from key:value, it will throw 500 error
