@@ -8,6 +8,11 @@ async function makeRequest(ctx, url, options) {
 
   ctx.response.status = response.status;
   ctx.response.body = response.body;
+
+  for (const [name, value] of response.headers) {
+    ctx.response.headers.append(name, value);
+  }
+
   ctx.response.headers.append("X-Yandex-Status", "success");
 }
 
