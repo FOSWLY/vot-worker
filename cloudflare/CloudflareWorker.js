@@ -1,5 +1,7 @@
 // Original script: https://github.com/mynovelhost/voice-over-translation/blob/master/CloudflareWorker.js
 
+const version = "1.0.2";
+
 const yandexUserAgent =
   "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 YaBrowser/23.7.1.1140 Yowser/2.5 Safari/537.36";
 
@@ -20,6 +22,22 @@ function errorResponse(message) {
       "X-Yandex-Status": message,
     },
   });
+}
+
+function healthResponse() {
+  return new Response(
+    JSON.stringify({
+      status: "ok",
+      version
+    }),
+    {
+      status: 200,
+      headers: {
+        ...corsHeaders,
+        "Content-Type": "application/json",
+      },
+    }
+  );
 }
 
 async function makeRequest(request) {
@@ -109,6 +127,8 @@ addEventListener("fetch", (event) => {
       return event.respondWith(errorResponse("error-method"));
 
     return event.respondWith(handleAudioProxyRequest(url.pathname, url.search));
+  } else if (url.pathname === "/health" && request.method === "GET") {
+    return event.respondWith(healthResponse())
   } else {
     return event.respondWith(errorResponse("error-path"));
   }

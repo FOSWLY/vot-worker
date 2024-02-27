@@ -1,5 +1,6 @@
 const host = "0.0.0.0"; // 0.0.0.0 - for global access, localhost - for local access
 const port = 7699;
+const version = "1.0.2";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -10,4 +11,10 @@ const corsHeaders = {
 
 const yandexUserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 YaBrowser/23.7.1.1140 Yowser/2.5 Safari/537.36";
 
-export { corsHeaders, host, port, yandexUserAgent };
+export {
+  corsHeaders,
+  version,
+  host,
+  port,
+  yandexUserAgent
+};
