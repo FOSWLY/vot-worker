@@ -3,7 +3,7 @@
 const version = "1.0.2";
 
 const yandexUserAgent =
-  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 YaBrowser/23.7.1.1140 Yowser/2.5 Safari/537.36";
+  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 YaBrowser/24.4.0.0 Safari/537.36";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -28,7 +28,7 @@ function healthResponse() {
   return new Response(
     JSON.stringify({
       status: "ok",
-      version
+      version,
     }),
     {
       status: 200,
@@ -65,7 +65,7 @@ async function handleYandexRequest(request, pathname) {
       body: new Uint8Array(requestInfo.body),
       method: "POST",
       headers: requestInfo.headers,
-    },
+    }
   );
 
   return await makeRequest(yandexRequest);
@@ -82,7 +82,7 @@ async function handleAudioProxyRequest(pathname, search) {
       headers: {
         "User-Agent": yandexUserAgent,
       },
-    },
+    }
   );
 
   return await makeRequest(audioRequest);
@@ -98,7 +98,7 @@ addEventListener("fetch", (event) => {
           ...corsHeaders,
           Allow: "GET, POST, OPTIONS",
         },
-      }),
+      })
     );
 
   const url = new URL(request.url);
@@ -128,7 +128,7 @@ addEventListener("fetch", (event) => {
 
     return event.respondWith(handleAudioProxyRequest(url.pathname, url.search));
   } else if (url.pathname === "/health" && request.method === "GET") {
-    return event.respondWith(healthResponse())
+    return event.respondWith(healthResponse());
   } else {
     return event.respondWith(errorResponse("error-path"));
   }
