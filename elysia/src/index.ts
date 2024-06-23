@@ -6,7 +6,10 @@ import * as fs from "fs";
 import config from "./config";
 
 import healthController from "./controllers/health";
-import videoTranslation from "./controllers/video-translation";
+import videoTranslationController from "./controllers/video-translation";
+import streamTranslationController from "./controllers/stream-translation";
+import videoSubtitlesController from "./controllers/video-subtitles";
+import sessionController from "./controllers/session";
 import setupElysia, { log } from "./setup";
 import { ValidationRequestError } from "./errors";
 
@@ -46,7 +49,10 @@ const app = new Elysia()
     };
   })
   .use(healthController)
-  .use(videoTranslation)
+  .use(videoTranslationController)
+  .use(streamTranslationController)
+  .use(videoSubtitlesController)
+  .use(sessionController)
   .listen({
     port: config.port,
     hostname: config.hostname,
