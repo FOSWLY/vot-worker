@@ -27,7 +27,6 @@ const app = new Elysia()
     }
   })
   .onError(({ set, code, error, httpStatus }) => {
-    console.log(code, error, set.headers);
     switch (code) {
       case "NOT_FOUND":
         set.status = httpStatus.HTTP_204_NO_CONTENT;
