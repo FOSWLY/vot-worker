@@ -1,11 +1,11 @@
 const host = "0.0.0.0"; // 0.0.0.0 - for global access, localhost - for local access
 const port = 7699;
-const version = "1.0.2";
+const version = "1.0.3";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "*",
-  "Access-Control-Allow-Methods": "POST, OPTIONS",
+  "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
   "Access-Control-Max-Age": "86400",
 };
 

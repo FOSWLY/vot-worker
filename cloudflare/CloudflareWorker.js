@@ -1,6 +1,6 @@
 // Original script: https://github.com/mynovelhost/voice-over-translation/blob/master/CloudflareWorker.js
 
-const version = "1.0.2";
+const version = "1.0.3";
 
 const yandexUserAgent =
   "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 YaBrowser/24.4.0.0 Safari/537.36";
@@ -8,7 +8,7 @@ const yandexUserAgent =
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "*",
-  "Access-Control-Allow-Methods": "POST, OPTIONS",
+  "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
   "Access-Control-Max-Age": "86400",
 };
 
@@ -40,6 +40,16 @@ function healthResponse() {
   );
 }
 
+function badRequestResponse() {
+  return new Response("Bad Request", {
+    status: 400,
+    headers: {
+      ...corsHeaders,
+      "Content-Type": "application/json",
+    },
+  });
+}
+
 async function makeRequest(request) {
   let response = await fetch(request);
   response = new Response(response.body, response);
@@ -50,13 +60,14 @@ async function makeRequest(request) {
 }
 
 async function handleYandexRequest(request, pathname) {
-  const requestInfo = await request.json();
-  if (
-    requestInfo.headers === undefined ||
-    requestInfo.headers === null ||
-    requestInfo.body === undefined ||
-    requestInfo.body === null
-  )
+  let requestInfo;
+  try {
+    requestInfo = await request.json();
+  } catch (error) {
+    return badRequestResponse();
+  }
+
+  if (requestInfo.headers == null || requestInfo.body == null)
     return errorResponse("error-request");
 
   const yandexRequest = new Request(
@@ -104,10 +115,13 @@ addEventListener("fetch", (event) => {
   const url = new URL(request.url);
 
   if (
-    url.pathname === "/video-translation/translate" ||
-    url.pathname === "/video-subtitles/get-subtitles" ||
-    url.pathname === "/stream-translation/translate-stream" ||
-    url.pathname === "/stream-translation/ping-stream"
+    [
+      "/video-translation/translate",
+      "/video-subtitles/get-subtitles",
+      "/stream-translation/translate-stream",
+      "/stream-translation/ping-stream",
+      "/session/create",
+    ].includes(url.pathname)
   ) {
     // translate endpoint
     const contentType = request.headers.get("content-type") || "";
