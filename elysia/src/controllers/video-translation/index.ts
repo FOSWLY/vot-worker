@@ -21,7 +21,7 @@ export default new Elysia().group("/video-translation", (app) =>
     )
     .get(
       "/audio-proxy/:audioId",
-      async ({ params: { audioId }, query }) => {
+      async ({ params: { audioId }, query, request }) => {
         if (!audioId.endsWith(".mp3")) {
           throw new ValidationRequestError("error-content");
         }
@@ -31,6 +31,7 @@ export default new Elysia().group("/video-translation", (app) =>
         }
 
         return await makeAudioRequest(
+          request,
           audioId,
           new URLSearchParams(query as Record<string, string>).toString(),
         );
