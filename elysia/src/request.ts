@@ -3,6 +3,7 @@ import config from "./config";
 async function makeRequest(url: string | URL, options: Record<any, any>) {
   const response = await fetch(url, options);
   response.headers.append("X-Yandex-Status", "success");
+  response.headers.delete("Access-Control-Allow-Origin");
 
   return new Response(response.body, {
     status: response.status,

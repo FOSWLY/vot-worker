@@ -1,6 +1,6 @@
 // Original script: https://github.com/mynovelhost/voice-over-translation/blob/master/CloudflareWorker.js
 
-const version = "1.0.3";
+const version = "1.0.4";
 
 const yandexUserAgent =
   "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 YaBrowser/24.4.0.0 Safari/537.36";
@@ -56,6 +56,7 @@ async function makeRequest(request) {
   for (const corsHeaderKey of corsHeadersKeys)
     response.headers.set(corsHeaderKey, corsHeaders[corsHeaderKey]);
   response.headers.set("X-Yandex-Status", "success");
+  response.headers.delete("Access-Control-Allow-Origin");
   return response;
 }
 

@@ -1,10 +1,7 @@
 import { yandexUserAgent } from "./config.js";
 
 async function makeRequest(ctx, url, options) {
-  const response = await fetch(
-    url,
-    options,
-  );
+  const response = await fetch(url, options);
 
   ctx.response.status = response.status;
   ctx.response.body = response.body;
@@ -14,6 +11,7 @@ async function makeRequest(ctx, url, options) {
   }
 
   ctx.response.headers.append("X-Yandex-Status", "success");
+  ctx.response.headers.delete("Access-Control-Allow-Origin");
 }
 
 async function makeRequestToYandex(ctx, pathname, body, headers) {
@@ -25,11 +23,15 @@ async function makeRequestToYandex(ctx, pathname, body, headers) {
 }
 
 async function makeAudioRequest(ctx, audioName, search) {
-  return await makeRequest(ctx, `https://vtrans.s3-private.mds.yandex.net/tts/prod/${audioName}${search}`, {
-    headers: {
-      "User-Agent": yandexUserAgent,
-    },
-  });
+  return await makeRequest(
+    ctx,
+    `https://vtrans.s3-private.mds.yandex.net/tts/prod/${audioName}${search}`,
+    {
+      headers: {
+        "User-Agent": yandexUserAgent,
+      },
+    }
+  );
 }
 
 export { makeRequestToYandex, makeAudioRequest };
