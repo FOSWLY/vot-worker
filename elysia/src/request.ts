@@ -23,22 +23,26 @@ async function makeAudioRequest(request: Request, audioName: string, search: str
   const response = await makeRequest(
     `https://vtrans.s3-private.mds.yandex.net/tts/prod/${audioName}?${search}`,
     {
+      method: request.method,
       headers: {
         "User-Agent": config.userAgent,
       },
     },
   );
 
-  if (!response.body) {
-    return response;
+  // remove repeatable field
+  response.headers.delete("date");
+  if (!response.body || ![200, 206].includes(response.status) || request.method === "HEAD") {
+    response.headers.delete("content-encoding");
+    return new Response(request.method === "HEAD" ? null : response.body, {
+      headers: response.headers,
+      status: response.status,
+    });
   }
 
   // https://github.com/oven-sh/bun/issues/10440
   const opts = { code: 200, start: 0, end: Infinity, range: false };
   const file = await Bun.readableStreamToBlob(response.body);
-
-  // remove repeatable field
-  response.headers.delete("date");
 
   response.headers.set("Content-Length", "" + file.size);
   if (request.headers.has("range")) {
