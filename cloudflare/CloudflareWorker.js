@@ -53,10 +53,10 @@ function badRequestResponse() {
 async function makeRequest(request) {
   let response = await fetch(request);
   response = new Response(response.body, response);
+  response.headers.delete("Access-Control-Allow-Origin");
   for (const corsHeaderKey of corsHeadersKeys)
     response.headers.set(corsHeaderKey, corsHeaders[corsHeaderKey]);
   response.headers.set("X-Yandex-Status", "success");
-  response.headers.delete("Access-Control-Allow-Origin");
   return response;
 }
 
