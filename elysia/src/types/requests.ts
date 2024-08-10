@@ -1,5 +1,5 @@
 export type FileProxyOpts = {
-  params: { fileName: string };
+  params: { "*": string };
   query: Record<string, string | undefined>;
   request: Request;
 };

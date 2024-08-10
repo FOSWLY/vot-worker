@@ -17,7 +17,7 @@ const videoSubtitlesRouter = new Router()
       headers
     );
   })
-  .get("/subtitles-proxy/:fileName", async (ctx) => {
+  .get("/subtitles-proxy/:fileName*", async (ctx) => {
     const { fileName } = ctx.params;
     const search = ctx.request.url.search;
     if (!search) {

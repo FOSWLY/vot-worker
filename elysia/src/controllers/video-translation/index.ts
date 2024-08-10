@@ -4,7 +4,8 @@ import { ValidationRequestError } from "../../errors";
 import ProxyModel from "../../models/proxy.model";
 import { FileProxyOpts } from "../../types/requests";
 
-async function audioProxy({ params: { fileName }, query, request }: FileProxyOpts) {
+async function audioProxy({ params, query, request }: FileProxyOpts) {
+  const fileName = params["*"];
   if (!fileName.endsWith(".mp3")) {
     throw new ValidationRequestError("error-content");
   }
@@ -37,10 +38,10 @@ export default new Elysia().group("/video-translation", (app) =>
         body: "proxy-model",
       },
     )
-    .get("/audio-proxy/:fileName", audioProxy, {
+    .get("/audio-proxy/*", audioProxy, {
       params: "proxy-file-model",
     })
-    .head("/audio-proxy/:fileName", audioProxy, {
+    .head("/audio-proxy/*", audioProxy, {
       params: "proxy-file-model",
     }),
 );

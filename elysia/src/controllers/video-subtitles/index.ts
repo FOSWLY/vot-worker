@@ -4,7 +4,8 @@ import ProxyModel from "../../models/proxy.model";
 import { ValidationRequestError } from "../../errors";
 import { FileProxyOpts } from "../../types/requests";
 
-async function subtitlesProxy({ params: { fileName }, query, request }: FileProxyOpts) {
+async function subtitlesProxy({ params, query, request }: FileProxyOpts) {
+  const fileName = params["*"];
   if (!Object.keys(query).length) {
     throw new ValidationRequestError("error-request");
   }
@@ -33,10 +34,10 @@ export default new Elysia().group("/video-subtitles", (app) =>
         body: "proxy-model",
       },
     )
-    .get("/subtitles-proxy/:fileName", subtitlesProxy, {
+    .get("/subtitles-proxy/*", subtitlesProxy, {
       params: "proxy-file-model",
     })
-    .head("/subtitles-proxy/:fileName", subtitlesProxy, {
+    .head("/subtitles-proxy/*", subtitlesProxy, {
       params: "proxy-file-model",
     }),
 );

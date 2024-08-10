@@ -91,8 +91,7 @@ async function handleYandexRequest(request, pathname) {
 async function handleS3ProxyRequest(type, pathname, search) {
   if (search === undefined) return errorResponse("error-request");
 
-  const pathnameArray = pathname.split("/");
-  const fileName = pathnameArray[pathnameArray.length - 1];
+  const fileName = pathname.split("/").slice(2).join("/");
   const audioRequest = new Request(
     `https://${s3Urls[type]}${fileName}${search}`,
     {
