@@ -36,7 +36,7 @@ async function makeS3Request(
   // remove repeatable field
   response.headers.delete("date");
   if (
-    type === "audio" ||
+    type === "subs" ||
     !response.body ||
     ![200, 206].includes(response.status) ||
     request.method === "HEAD"
