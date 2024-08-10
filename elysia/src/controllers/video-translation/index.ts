@@ -1,18 +1,11 @@
-import { Elysia, t } from "elysia";
-import { makeAudioRequest, makeRequestToYandex } from "../../request";
+import { Elysia } from "elysia";
+import { makeS3Request, makeRequestToYandex } from "../../request";
 import { ValidationRequestError } from "../../errors";
 import ProxyModel from "../../models/proxy.model";
+import { FileProxyOpts } from "../../types/requests";
 
-async function audioProxy({
-  params: { audioId },
-  query,
-  request,
-}: {
-  params: { audioId: string };
-  query: Record<string, string | undefined>;
-  request: Request;
-}) {
-  if (!audioId.endsWith(".mp3")) {
+async function audioProxy({ params: { fileName }, query, request }: FileProxyOpts) {
+  if (!fileName.endsWith(".mp3")) {
     throw new ValidationRequestError("error-content");
   }
 
@@ -20,18 +13,13 @@ async function audioProxy({
     throw new ValidationRequestError("error-request");
   }
 
-  return await makeAudioRequest(
+  return await makeS3Request(
     request,
-    audioId,
+    "audio",
+    fileName,
     new URLSearchParams(query as Record<string, string>).toString(),
   );
 }
-
-const audioProxyOpts = {
-  params: t.Object({
-    audioId: t.String(),
-  }),
-};
 
 export default new Elysia().group("/video-translation", (app) =>
   app
@@ -49,6 +37,10 @@ export default new Elysia().group("/video-translation", (app) =>
         body: "proxy-model",
       },
     )
-    .get("/audio-proxy/:audioId", audioProxy, audioProxyOpts)
-    .head("/audio-proxy/:audioId", audioProxy, audioProxyOpts),
+    .get("/audio-proxy/:fileName", audioProxy, {
+      params: "proxy-file-model",
+    })
+    .head("/audio-proxy/:fileName", audioProxy, {
+      params: "proxy-file-model",
+    }),
 );

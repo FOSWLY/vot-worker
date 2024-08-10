@@ -11,28 +11,36 @@ async function makeRequest(url: string | URL, options: Record<any, any>) {
   });
 }
 
-async function makeRequestToYandex(pathname: string, body: any, headers: Record<any, any>) {
+async function makeRequestToYandex(pathname: string, body: unknown, headers: Record<any, any>) {
   return await makeRequest(`https://api.browser.yandex.ru/${pathname}`, {
-    body: body,
+    body,
     method: "POST",
     headers: headers,
   });
 }
 
-async function makeAudioRequest(request: Request, audioName: string, search: string) {
-  const response = await makeRequest(
-    `https://vtrans.s3-private.mds.yandex.net/tts/prod/${audioName}?${search}`,
-    {
-      method: request.method,
-      headers: {
-        "User-Agent": config.userAgent,
-      },
+async function makeS3Request(
+  request: Request,
+  type: "audio" | "subs",
+  fileName: string,
+  search: string,
+) {
+  const url = `https://${config.s3Urls[type]}${fileName}?${search}`;
+  const response = await makeRequest(url, {
+    method: request.method,
+    headers: {
+      "User-Agent": config.userAgent,
     },
-  );
+  });
 
   // remove repeatable field
   response.headers.delete("date");
-  if (!response.body || ![200, 206].includes(response.status) || request.method === "HEAD") {
+  if (
+    type === "audio" ||
+    !response.body ||
+    ![200, 206].includes(response.status) ||
+    request.method === "HEAD"
+  ) {
     response.headers.delete("content-encoding");
     return new Response(request.method === "HEAD" ? null : response.body, {
       headers: response.headers,
@@ -47,9 +55,9 @@ async function makeAudioRequest(request: Request, audioName: string, search: str
   response.headers.set("Content-Length", "" + file.size);
   if (request.headers.has("range")) {
     opts.code = 206;
-    let [x, y] = request.headers.get("range")!.replace("bytes=", "").split("-");
-    let end = (opts.end = parseInt(y, 10) || file.size - 1);
-    let start = (opts.start = parseInt(x, 10) || 0);
+    const [x, y] = request.headers.get("range")!.replace("bytes=", "").split("-");
+    const end = (opts.end = parseInt(y, 10) || file.size - 1);
+    const start = (opts.start = parseInt(x, 10) || 0);
 
     if (start >= file.size || end >= file.size) {
       response.headers.set("Content-Range", `bytes */${file.size}`);
@@ -71,4 +79,4 @@ async function makeAudioRequest(request: Request, audioName: string, search: str
   });
 }
 
-export { makeRequest, makeRequestToYandex, makeAudioRequest };
+export { makeRequest, makeRequestToYandex, makeS3Request };

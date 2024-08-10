@@ -1,5 +1,5 @@
 import { Router } from "https://deno.land/x/oak@v12.6.1/mod.ts";
-import { makeRequestToYandex, makeAudioRequest } from "../requests.js";
+import { makeRequestToYandex, makeS3Request } from "../requests.js";
 import { errorResponse } from "../responses.js";
 import { validateJSONRequest } from "../validators.js";
 
@@ -15,12 +15,12 @@ const videoTranslationRouter = new Router()
       ctx,
       "video-translation/translate",
       body,
-      headers,
+      headers
     );
   })
-  .get("/audio-proxy/:audioId", async (ctx) => {
-    const { audioId } = ctx.params;
-    if (!audioId || !audioId?.endsWith(".mp3")) {
+  .get("/audio-proxy/:fileName", async (ctx) => {
+    const { fileName } = ctx.params;
+    if (!fileName?.endsWith(".mp3")) {
       return errorResponse(ctx, "error-content");
     }
 
@@ -29,7 +29,7 @@ const videoTranslationRouter = new Router()
       return errorResponse(ctx, "error-request");
     }
 
-    return await makeAudioRequest(ctx, audioId, search);
+    return await makeS3Request(ctx, "audio", fileName, search);
   });
 
 export default videoTranslationRouter;

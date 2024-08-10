@@ -1,4 +1,4 @@
-import { yandexUserAgent } from "./config.js";
+import { s3Urls, yandexUserAgent } from "./config.js";
 
 async function makeRequest(ctx, url, options) {
   const response = await fetch(url, options);
@@ -22,10 +22,10 @@ async function makeRequestToYandex(ctx, pathname, body, headers) {
   });
 }
 
-async function makeAudioRequest(ctx, audioName, search) {
+async function makeS3Request(ctx, type, fileName, search) {
   return await makeRequest(
     ctx,
-    `https://vtrans.s3-private.mds.yandex.net/tts/prod/${audioName}${search}`,
+    `https://${s3Urls[type]}/${fileName}${search}`,
     {
       headers: {
         "User-Agent": yandexUserAgent,
@@ -34,4 +34,4 @@ async function makeAudioRequest(ctx, audioName, search) {
   );
 }
 
-export { makeRequestToYandex, makeAudioRequest };
+export { makeRequestToYandex, makeS3Request };

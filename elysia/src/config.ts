@@ -1,4 +1,4 @@
-import * as path from "node:path";
+import path from "node:path";
 import { LoggerLevel } from "./types/logging";
 import { version } from "../package.json";
 
@@ -10,7 +10,6 @@ export default {
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 YaBrowser/24.6.0.0 Safari/537.36",
   logging: {
     level: LoggerLevel.INFO,
-    logRequests: false, // for debugging (true/false)
     logPath: path.join(__dirname, "..", "logs"),
   },
   cors: {
@@ -18,5 +17,9 @@ export default {
     "Access-Control-Allow-Headers": "*",
     "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
     "Access-Control-Max-Age": "86400",
+  },
+  s3Urls: {
+    audio: "vtrans.s3-private.mds.yandex.net/tts/prod/",
+    subs: "brosubs.s3-private.mds.yandex.net/vtrans/",
   },
 };

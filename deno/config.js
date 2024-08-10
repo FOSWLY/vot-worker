@@ -1,6 +1,6 @@
 const host = "0.0.0.0"; // 0.0.0.0 - for global access, localhost - for local access
 const port = 7699;
-const version = "1.0.4";
+const version = "1.0.5";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -12,4 +12,9 @@ const corsHeaders = {
 const yandexUserAgent =
   "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 YaBrowser/24.4.0.0 Safari/537.36";
 
-export { corsHeaders, version, host, port, yandexUserAgent };
+const s3Urls = {
+  audio: "vtrans.s3-private.mds.yandex.net/tts/prod/",
+  subs: "brosubs.s3-private.mds.yandex.net/vtrans/",
+};
+
+export { corsHeaders, version, host, port, yandexUserAgent, s3Urls };

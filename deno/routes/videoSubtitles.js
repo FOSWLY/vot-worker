@@ -14,8 +14,17 @@ const videoSubtitlesRouter = new Router()
       ctx,
       "video-subtitles/get-subtitles",
       body,
-      headers,
+      headers
     );
   })
+  .get("/subtitles-proxy/:fileName", async (ctx) => {
+    const { fileName } = ctx.params;
+    const search = ctx.request.url.search;
+    if (!search) {
+      return errorResponse(ctx, "error-request");
+    }
+
+    return await makeS3Request(ctx, "subs", fileName, search);
+  });
 
 export default videoSubtitlesRouter;

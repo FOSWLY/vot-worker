@@ -1,6 +1,6 @@
 // Original script: https://github.com/mynovelhost/voice-over-translation/blob/master/CloudflareWorker.js
 
-const version = "1.0.4";
+const version = "1.0.5";
 
 const yandexUserAgent =
   "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 YaBrowser/24.4.0.0 Safari/537.36";
@@ -13,6 +13,11 @@ const corsHeaders = {
 };
 
 const corsHeadersKeys = Object.keys(corsHeaders);
+
+const s3Urls = {
+  audio: "vtrans.s3-private.mds.yandex.net/tts/prod/",
+  subs: "brosubs.s3-private.mds.yandex.net/vtrans/",
+};
 
 function errorResponse(message) {
   return new Response(null, {
@@ -83,13 +88,13 @@ async function handleYandexRequest(request, pathname) {
   return await makeRequest(yandexRequest);
 }
 
-async function handleAudioProxyRequest(pathname, search) {
+async function handleS3ProxyRequest(type, pathname, search) {
   if (search === undefined) return errorResponse("error-request");
 
   const pathnameArray = pathname.split("/");
-  const audioName = pathnameArray[pathnameArray.length - 1];
+  const fileName = pathnameArray[pathnameArray.length - 1];
   const audioRequest = new Request(
-    "https://vtrans.s3-private.mds.yandex.net/tts/prod/" + audioName + search,
+    `https://${s3Urls[type]}${fileName}${search}`,
     {
       headers: {
         "User-Agent": yandexUserAgent,
@@ -141,7 +146,17 @@ addEventListener("fetch", (event) => {
     if (request.method !== "GET")
       return event.respondWith(errorResponse("error-method"));
 
-    return event.respondWith(handleAudioProxyRequest(url.pathname, url.search));
+    return event.respondWith(
+      handleS3ProxyRequest("audio", url.pathname, url.search)
+    );
+  } else if (url.pathname.startsWith("/video-subtitles/subtitles-proxy")) {
+    // proxy endpoint
+    if (request.method !== "GET")
+      return event.respondWith(errorResponse("error-method"));
+
+    return event.respondWith(
+      handleS3ProxyRequest("subs", url.pathname, url.search)
+    );
   } else if (url.pathname === "/health" && request.method === "GET") {
     return event.respondWith(healthResponse());
   } else {

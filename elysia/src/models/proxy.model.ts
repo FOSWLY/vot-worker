@@ -5,4 +5,7 @@ export default new Elysia().model({
     body: t.Array(t.Any()),
     headers: t.Object(t.Any()),
   }),
+  "proxy-file-model": t.Object({
+    fileName: t.String(),
+  }),
 });
