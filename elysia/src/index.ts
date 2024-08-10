@@ -10,7 +10,7 @@ import videoTranslationController from "./controllers/video-translation";
 import streamTranslationController from "./controllers/stream-translation";
 import videoSubtitlesController from "./controllers/video-subtitles";
 import sessionController from "./controllers/session";
-import setupElysia, { log } from "./setup";
+import { log } from "./logging";
 import { ValidationRequestError } from "./errors";
 
 if (!fs.existsSync(config.logging.logPath)) {
@@ -19,7 +19,6 @@ if (!fs.existsSync(config.logging.logPath)) {
 }
 
 const app = new Elysia()
-  .use(setupElysia)
   .use(HttpStatusCode())
   .error({
     VALIDATION_REQUEST_ERROR: ValidationRequestError,
@@ -38,7 +37,9 @@ const app = new Elysia()
       case "VALIDATION_REQUEST_ERROR":
         set.status = httpStatus.HTTP_204_NO_CONTENT;
         set.headers["X-Yandex-Status"] =
-          (error as any).data ?? code === "VALIDATION" ? "error-content" : "error-request";
+          (error as ValidationRequestError).data ?? code === "VALIDATION"
+            ? "error-content"
+            : "error-request";
         return "";
       case "PARSE":
         return "Bad Request";
