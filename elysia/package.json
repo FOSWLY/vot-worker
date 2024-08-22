@@ -7,20 +7,21 @@
     "lint": "bunx oxlint --ignore-path=.oxlintignore && bunx eslint"
   },
   "dependencies": {
-    "elysia": "^1.0.15",
+    "elysia": "^1.1.7",
     "elysia-http-status-code": "^1.0.9",
-    "pino-pretty": "^11.0.0"
+    "pino": "^9.3.2",
+    "pino-pretty": "^11.2.2"
   },
   "devDependencies": {
     "@types/eslint__js": "^8.42.3",
-    "@typescript-eslint/eslint-plugin": "^8.0.1",
-    "@typescript-eslint/parser": "^8.0.1",
+    "@typescript-eslint/eslint-plugin": "^8.2.0",
+    "@typescript-eslint/parser": "^8.2.0",
     "bun-types": "latest",
     "eslint": "^9.9.0",
-    "eslint-plugin-oxlint": "^0.7.0",
-    "eslint-plugin-sonarjs": "^1.0.4",
-    "oxlint": "^0.7.0",
-    "typescript-eslint": "^8.0.1"
+    "eslint-plugin-oxlint": "^0.7.2",
+    "eslint-plugin-sonarjs": "^2.0.0",
+    "oxlint": "^0.7.2",
+    "typescript-eslint": "^8.2.0"
   },
   "module": "src/index.js",
   "bun-create": {
@@ -28,6 +29,6 @@
   },
   "type": "module",
   "peerDependencies": {
-    "typescript": "^5.0.0"
+    "typescript": "^5.4.3"
   }
 }
