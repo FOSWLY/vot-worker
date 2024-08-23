@@ -15,7 +15,7 @@ async function makeRequestToYandex(pathname: string, body: unknown, headers: Rec
   return await makeRequest(`https://api.browser.yandex.ru/${pathname}`, {
     body,
     method: "POST",
-    headers: headers,
+    headers,
   });
 }
 
