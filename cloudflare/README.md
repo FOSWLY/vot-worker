@@ -23,3 +23,11 @@
 8. В открывшемся браузерном текстовом редакторе замените все содержимое файла worker.js на содержимое файла [CloudWorker.js](https://github.com/ilyhalight/voice-over-translation/blob/master/CloudWorker.js)
 9. Сохраните код с помощью комбинации Ctrl+S и нажмите на синюю кнопку "Save and deploy"
 10. Готово, теперь, вам осталось всего лишь поменять в коде "vot.toil-dump.workers.dev" на домен вашего воркера
+
+## Локальное тестирование
+
+1. Установите NodeJS
+2. Запустите сервер:
+```bash
+npx wrangler dev CloudflareWorker.js
+```

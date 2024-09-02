@@ -1,6 +1,6 @@
 // Original script: https://github.com/mynovelhost/voice-over-translation/blob/master/CloudflareWorker.js
 
-const version = "1.0.5";
+const version = "1.0.6";
 
 const yandexUserAgent =
   "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 YaBrowser/24.7.0.0 Safari/537.36";
@@ -91,7 +91,7 @@ async function handleYandexRequest(request, pathname) {
 async function handleS3ProxyRequest(type, pathname, search) {
   if (search === undefined) return errorResponse("error-request");
 
-  const fileName = pathname.split("/").slice(2).join("/");
+  const fileName = pathname.split("/").slice(3).join("/");
   const audioRequest = new Request(
     `https://${s3Urls[type]}${fileName}${search}`,
     {

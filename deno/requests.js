@@ -23,15 +23,11 @@ async function makeRequestToYandex(ctx, pathname, body, headers) {
 }
 
 async function makeS3Request(ctx, type, fileName, search) {
-  return await makeRequest(
-    ctx,
-    `https://${s3Urls[type]}/${fileName}${search}`,
-    {
-      headers: {
-        "User-Agent": yandexUserAgent,
-      },
-    }
-  );
+  return await makeRequest(ctx, `https://${s3Urls[type]}${fileName}${search}`, {
+    headers: {
+      "User-Agent": yandexUserAgent,
+    },
+  });
 }
 
 export { makeRequestToYandex, makeS3Request };
