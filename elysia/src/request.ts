@@ -1,11 +1,24 @@
 import config from "./config";
+import { log } from "./logging";
 
 async function makeRequest(url: string | URL, options: Record<any, any>) {
   const response = await fetch(url, options);
   response.headers.append("X-Yandex-Status", "success");
   response.headers.delete("Access-Control-Allow-Origin");
+  const body = response.body;
+  if (![200, 204, 206, 301, 304, 404].includes(response.status)) {
+    log.error(
+      {
+        url,
+        options: JSON.stringify(options),
+        response: body,
+        status: response.status,
+      },
+      "An error occurred during the make request",
+    );
+  }
 
-  return new Response(response.body, {
+  return new Response(body, {
     status: response.status,
     headers: response.headers,
   });

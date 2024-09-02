@@ -3,6 +3,7 @@ import { pino, type TransportMultiOptions, type TransportTargetOptions } from "p
 
 import config from "./config";
 
+const { loki } = config.logging;
 const startingDate = new Date().toISOString().split("T")[0];
 
 type PinoOpts = Parameters<typeof pino>[0] & {
@@ -39,5 +40,25 @@ opts.transport.targets.push({
     destination: path.join(config.logging.logPath, `${startingDate}.log`),
   },
 });
+
+if (loki.host) {
+  opts.transport.targets.push({
+    level: config.logging.level,
+    target: "pino-loki",
+    options: {
+      batching: true,
+      interval: 5,
+      labels: { application: config.logging.loki.label },
+      host: loki.host,
+      basicAuth:
+        loki.user && loki.password
+          ? {
+              username: loki.user,
+              password: loki.password,
+            }
+          : undefined,
+    },
+  });
+}
 
 export const log = pino(opts);
