@@ -1,4 +1,5 @@
 import { Router } from "https://deno.land/x/oak@v12.6.1/mod.ts";
+import { validateJSONRequest } from "../validators.js";
 
 const sessionRouter = new Router().post("/create", async (ctx) => {
   const [body, headers] = await validateJSONRequest(ctx);
