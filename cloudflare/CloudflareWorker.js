@@ -112,6 +112,9 @@ async function handleYAJSONRequest(request, pathname) {
     return badRequestResponse();
   }
 
+  if (requestInfo.headers == null || requestInfo.body == null)
+    return errorResponse("error-request");
+
   const audioRequest = new Request(`https://api.browser.yandex.ru${pathname}`, {
     body: JSON.stringify(requestInfo.body),
     method: request.method,
