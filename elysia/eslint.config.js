@@ -15,6 +15,7 @@ export default tseslint.config(
     rules: {
       "@typescript-eslint/no-explicit-any": 0,
       "@typescript-eslint/consistent-type-definitions": 0,
+      "eslint-disable-next-line sonarjs/new-cap": 0,
     },
     languageOptions: {
       ecmaVersion: "latest",

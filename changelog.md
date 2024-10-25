@@ -1,3 +1,7 @@
+# 1.0.7
+
+- Добавлено проксирование /video-translation/audio и /video-translation/fail-audio-js
+
 # 1.0.6
 
 - (elysia-worker) Добавлено логирование неудачных запросов через Loki

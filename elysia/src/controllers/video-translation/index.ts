@@ -38,6 +38,34 @@ export default new Elysia().group("/video-translation", (app) =>
         body: "proxy-model",
       },
     )
+    .put(
+      "/audio",
+      async ({ body }) => {
+        return await makeRequestToYandex(
+          "video-translation/audio",
+          new Uint8Array(body.body),
+          body.headers,
+          "PUT",
+        );
+      },
+      {
+        body: "proxy-model",
+      },
+    )
+    .put(
+      "/fail-audio-js",
+      async ({ body }) => {
+        return await makeRequestToYandex(
+          "video-translation/fail-audio-js",
+          body.body,
+          body.headers,
+          "PUT",
+        );
+      },
+      {
+        body: "proxy-model",
+      },
+    )
     .get("/audio-proxy/*", audioProxy, {
       params: "proxy-file-model",
     })

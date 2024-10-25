@@ -1,6 +1,6 @@
 // Original script: https://github.com/mynovelhost/voice-over-translation/blob/master/CloudflareWorker.js
 
-const version = "1.0.6";
+const version = "1.0.7";
 
 const yandexUserAgent =
   "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 YaBrowser/24.7.0.0 Safari/537.36";
@@ -69,7 +69,7 @@ async function handleYandexRequest(request, pathname) {
   let requestInfo;
   try {
     requestInfo = await request.json();
-  } catch (error) {
+  } catch {
     return badRequestResponse();
   }
 
@@ -104,6 +104,27 @@ async function handleS3ProxyRequest(type, pathname, search) {
   return await makeRequest(audioRequest);
 }
 
+async function handleYAJSONRequest(request, pathname) {
+  let requestInfo;
+  try {
+    requestInfo = await request.json();
+  } catch {
+    return badRequestResponse();
+  }
+
+  const audioRequest = new Request(`https://api.browser.yandex.ru${pathname}`, {
+    body: JSON.stringify(requestInfo.body),
+    method: request.method,
+    headers: {
+      "User-Agent": yandexUserAgent,
+      "Content-Type": "application/json",
+      ...requestInfo.headers,
+    },
+  });
+
+  return await makeRequest(audioRequest);
+}
+
 addEventListener("fetch", (event) => {
   const request = event.request;
 
@@ -112,7 +133,7 @@ addEventListener("fetch", (event) => {
       new Response(null, {
         headers: {
           ...corsHeaders,
-          Allow: "GET, POST, OPTIONS",
+          Allow: "GET, POST, PUT, OPTIONS",
         },
       })
     );
@@ -128,7 +149,7 @@ addEventListener("fetch", (event) => {
       "/session/create",
     ].includes(url.pathname)
   ) {
-    // translate endpoint
+    // translate endpoint (POST)
     const contentType = request.headers.get("content-type") || "";
     if (!contentType.includes("application/json"))
       return event.respondWith(errorResponse("error-content"));
@@ -137,6 +158,21 @@ addEventListener("fetch", (event) => {
       return event.respondWith(errorResponse("error-method"));
 
     return event.respondWith(handleYandexRequest(request, url.pathname));
+  } else if (url.pathname === "/video-translation/audio") {
+    // translate endpoint (PUT)
+    const contentType = request.headers.get("content-type") || "";
+    if (!contentType.includes("application/json"))
+      return event.respondWith(errorResponse("error-content"));
+
+    if (request.method !== "PUT")
+      return event.respondWith(errorResponse("error-method"));
+
+    return event.respondWith(handleYandexRequest(request, url.pathname));
+  } else if (url.pathname === "/video-translation/fail-audio-js") {
+    if (request.method !== "PUT")
+      return event.respondWith(errorResponse("error-method"));
+
+    return event.respondWith(handleYAJSONRequest(request, url.pathname));
   } else if (
     url.pathname.startsWith("/video-translation/audio-proxy") &&
     url.pathname.endsWith(".mp3")

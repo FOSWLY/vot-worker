@@ -24,10 +24,15 @@ async function makeRequest(url: string | URL, options: Record<any, any>) {
   });
 }
 
-async function makeRequestToYandex(pathname: string, body: unknown, headers: Record<any, any>) {
+async function makeRequestToYandex(
+  pathname: string,
+  body: unknown,
+  headers: Record<any, any>,
+  method = "POST",
+) {
   return await makeRequest(`https://api.browser.yandex.ru/${pathname}`, {
     body,
-    method: "POST",
+    method,
     headers,
   });
 }

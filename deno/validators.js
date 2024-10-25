@@ -1,6 +1,6 @@
 import { errorResponse } from "./responses.js";
 
-async function validateJSONRequest(ctx) {
+async function validateJSONRequest(ctx, toU8Array = true) {
   const contentType = ctx.request.headers.get("Content-Type");
   if (contentType !== "application/json") {
     errorResponse(ctx, "error-content");
@@ -13,9 +13,13 @@ async function validateJSONRequest(ctx) {
   let yandexBody = requestInfo.body;
   const yandexHeaders = requestInfo.headers;
 
-  if ((yandexBody == undefined && yandexHeaders == undefined)) {
+  if (yandexBody == undefined && yandexHeaders == undefined) {
     errorResponse(ctx, "error-request");
     return [null, null];
+  }
+
+  if (!toU8Array) {
+    return [yandexBody, yandexHeaders];
   }
 
   yandexBody = new Uint8Array(yandexBody);

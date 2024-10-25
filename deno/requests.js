@@ -14,11 +14,17 @@ async function makeRequest(ctx, url, options) {
   ctx.response.headers.append("X-Yandex-Status", "success");
 }
 
-async function makeRequestToYandex(ctx, pathname, body, headers) {
+async function makeRequestToYandex(
+  ctx,
+  pathname,
+  body,
+  headers,
+  method = "POST"
+) {
   return await makeRequest(ctx, `https://api.browser.yandex.ru/${pathname}`, {
-    body: body,
-    method: "POST",
-    headers: headers,
+    body,
+    method,
+    headers,
   });
 }
 

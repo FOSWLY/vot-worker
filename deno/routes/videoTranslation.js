@@ -18,6 +18,36 @@ const videoTranslationRouter = new Router()
       headers
     );
   })
+  .put("/audio", async (ctx) => {
+    const [body, headers] = await validateJSONRequest(ctx);
+    if (!body || !headers) {
+      return errorResponse(ctx, "error-content");
+    }
+
+    // if the value is different from key:value, it will throw 500 error
+    return await makeRequestToYandex(
+      ctx,
+      "video-translation/audio",
+      body,
+      headers,
+      "PUT"
+    );
+  })
+  .put("/fail-audio-js", async (ctx) => {
+    const [body, headers] = await validateJSONRequest(ctx, false);
+    if (!body || !headers) {
+      return errorResponse(ctx, "error-content");
+    }
+
+    // if the value is different from key:value, it will throw 500 error
+    return await makeRequestToYandex(
+      ctx,
+      "video-translation/fail-audio-js",
+      body,
+      headers,
+      "PUT"
+    );
+  })
   .get("/audio-proxy/:fileName", async (ctx) => {
     const { fileName } = ctx.params;
     if (!fileName?.endsWith(".mp3")) {
