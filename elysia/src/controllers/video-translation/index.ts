@@ -57,13 +57,13 @@ export default new Elysia().group("/video-translation", (app) =>
       async ({ body }) => {
         return await makeRequestToYandex(
           "video-translation/fail-audio-js",
-          body.body,
+          JSON.stringify(body.body),
           body.headers,
           "PUT",
         );
       },
       {
-        body: "proxy-model",
+        body: "proxy-json-model",
       },
     )
     .get("/audio-proxy/*", audioProxy, {
