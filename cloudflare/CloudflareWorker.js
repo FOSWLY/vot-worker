@@ -80,7 +80,7 @@ async function handleYandexRequest(request, pathname) {
     "https://api.browser.yandex.ru" + pathname,
     {
       body: new Uint8Array(requestInfo.body),
-      method: "POST",
+      method: request.method,
       headers: requestInfo.headers,
     }
   );
