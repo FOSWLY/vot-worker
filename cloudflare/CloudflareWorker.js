@@ -116,7 +116,7 @@ async function handleYAJSONRequest(request, pathname) {
     return errorResponse("error-request");
 
   const audioRequest = new Request(`https://api.browser.yandex.ru${pathname}`, {
-    body: JSON.stringify(requestInfo.body),
+    body: requestInfo.body,
     method: request.method,
     headers: {
       "User-Agent": yandexUserAgent,

@@ -8,7 +8,7 @@ export default new Elysia().model({
     headers: HeadersType,
   }),
   "proxy-json-model": t.Object({
-    body: t.Union([t.Record(t.String(), t.Any()), t.Array(t.Any())]),
+    body: t.String(),
     headers: HeadersType,
   }),
   "proxy-file-model": t.Object({

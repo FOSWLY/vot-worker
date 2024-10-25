@@ -57,7 +57,7 @@ export default new Elysia().group("/video-translation", (app) =>
       async ({ body }) => {
         return await makeRequestToYandex(
           "video-translation/fail-audio-js",
-          JSON.stringify(body.body),
+          body.body,
           body.headers,
           "PUT",
         );
