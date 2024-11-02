@@ -5,5 +5,6 @@ declare module "bun" {
     LOKI_USER: string;
     LOKI_PASSWORD: string;
     LOKI_LABEL: string;
+    FORCE_USE_PROXY: "true" | "false";
   }
 }

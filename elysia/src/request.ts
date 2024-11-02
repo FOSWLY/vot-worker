@@ -1,35 +1,47 @@
 import config from "./config";
 import { log } from "./logging";
 
-const { proxyList } = config;
+// eslint-disable-next-line prefer-const
+let { proxyList, forceUseProxy } = config;
 
 const getRandomProxy = () =>
   // eslint-disable-next-line sonarjs/pseudo-random
   proxyList[Math.floor(Math.random() * proxyList.length)];
 
 async function makeRequest(url: string | URL, options: Record<any, any>) {
-  const fetchOpts = proxyList.length
-    ? {
-        ...options,
-        proxy: getRandomProxy(),
-      }
-    : options;
+  const proxy = proxyList.length ? getRandomProxy() : "";
+  const fetchOpts: FetchRequestInit = {
+    ...options,
+    proxy,
+  };
   const logOpts = JSON.stringify(fetchOpts);
   try {
+    if (forceUseProxy && !proxy) {
+      throw new Error("Failed to find any available proxy");
+    }
+
     const response = await fetch(url, fetchOpts);
     response.headers.append("X-Yandex-Status", "success");
     response.headers.delete("Access-Control-Allow-Origin");
     const body = response.body;
     const headers = response.headers;
     if (![200, 204, 206, 301, 304, 404].includes(response.status)) {
+      const isCaptchaError = headers.has("x-yandex-captcha");
+      if (isCaptchaError) {
+        proxyList = proxyList.filter((proxyItem) => proxyItem !== proxy);
+      }
+
       log.error(
         {
           url,
           options: logOpts,
           headers,
           status: response.status,
+          proxy,
         },
-        "An error occurred during the make request",
+        isCaptchaError
+          ? "Request has been temporarily blocked by Yandex Captcha"
+          : "An error occurred during the make request",
       );
     }
 
@@ -39,7 +51,7 @@ async function makeRequest(url: string | URL, options: Record<any, any>) {
     });
   } catch (err) {
     const message = (err as Error).message;
-    log.error({ url, message, logOpts }, "Failed to make request");
+    log.error({ url, message, options: logOpts, proxy }, "Failed to make request");
     return new Response(null, {
       status: 204,
       headers: {
