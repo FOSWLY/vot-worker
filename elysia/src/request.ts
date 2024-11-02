@@ -1,17 +1,32 @@
 import config from "./config";
 import { log } from "./logging";
 
+const { proxyList } = config;
+
+const getRandomProxy = () =>
+  // eslint-disable-next-line sonarjs/pseudo-random
+  proxyList[Math.floor(Math.random() * proxyList.length)];
+
 async function makeRequest(url: string | URL, options: Record<any, any>) {
-  const response = await fetch(url, options);
+  const fetchOpts = proxyList.length
+    ? {
+        ...options,
+        proxy: getRandomProxy(),
+      }
+    : options;
+  const response = await fetch(url, fetchOpts);
   response.headers.append("X-Yandex-Status", "success");
   response.headers.delete("Access-Control-Allow-Origin");
   const body = response.body;
+  const headers = response.headers;
   if (![200, 204, 206, 301, 304, 404].includes(response.status)) {
+    const data = await response.text();
     log.error(
       {
         url,
-        options: JSON.stringify(options),
-        response: body,
+        options: JSON.stringify(fetchOpts),
+        response: data,
+        headers,
         status: response.status,
       },
       "An error occurred during the make request",
@@ -20,7 +35,7 @@ async function makeRequest(url: string | URL, options: Record<any, any>) {
 
   return new Response(body, {
     status: response.status,
-    headers: response.headers,
+    headers,
   });
 }
 

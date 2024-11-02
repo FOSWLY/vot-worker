@@ -1,3 +1,8 @@
+# 1.0.8
+
+- (elysia-worker) Добавлена возможность установки HTTP/HTTPS прокси. Для включения добавьте прокси в формате [<PROTOCOL>://]<USERNAME>:<PASSWORD>@<HOST>[:<port>] в файл elysia/proxies.txt, например `https://username:password@proxy.example.com:8080`
+- (elysia-worker) Добавлено логирование заголовков и тела ответа неудачных запросов
+
 # 1.0.7
 
 - Добавлено проксирование /video-translation/audio и /video-translation/fail-audio-js
