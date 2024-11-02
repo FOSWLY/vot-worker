@@ -22,12 +22,10 @@ async function makeRequest(url: string | URL, options: Record<any, any>) {
     const body = response.body;
     const headers = response.headers;
     if (![200, 204, 206, 301, 304, 404].includes(response.status)) {
-      const data = await response.text();
       log.error(
         {
           url,
           options: logOpts,
-          response: data,
           headers,
           status: response.status,
         },
