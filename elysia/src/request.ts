@@ -14,29 +14,41 @@ async function makeRequest(url: string | URL, options: Record<any, any>) {
         proxy: getRandomProxy(),
       }
     : options;
-  const response = await fetch(url, fetchOpts);
-  response.headers.append("X-Yandex-Status", "success");
-  response.headers.delete("Access-Control-Allow-Origin");
-  const body = response.body;
-  const headers = response.headers;
-  if (![200, 204, 206, 301, 304, 404].includes(response.status)) {
-    const data = await response.text();
-    log.error(
-      {
-        url,
-        options: JSON.stringify(fetchOpts),
-        response: data,
-        headers,
-        status: response.status,
-      },
-      "An error occurred during the make request",
-    );
-  }
+  const logOpts = JSON.stringify(fetchOpts);
+  try {
+    const response = await fetch(url, fetchOpts);
+    response.headers.append("X-Yandex-Status", "success");
+    response.headers.delete("Access-Control-Allow-Origin");
+    const body = response.body;
+    const headers = response.headers;
+    if (![200, 204, 206, 301, 304, 404].includes(response.status)) {
+      const data = await response.text();
+      log.error(
+        {
+          url,
+          options: logOpts,
+          response: data,
+          headers,
+          status: response.status,
+        },
+        "An error occurred during the make request",
+      );
+    }
 
-  return new Response(body, {
-    status: response.status,
-    headers,
-  });
+    return new Response(body, {
+      status: response.status,
+      headers,
+    });
+  } catch (err) {
+    const message = (err as Error).message;
+    log.error({ url, message, logOpts }, "Failed to make request");
+    return new Response(null, {
+      status: 204,
+      headers: {
+        "X-Yandex-Status": message,
+      },
+    });
+  }
 }
 
 async function makeRequestToYandex(
