@@ -29,15 +29,9 @@ async function makeRequestToYandex(
 }
 
 async function makeS3Request(ctx, type, fileName, search) {
-  const range = ctx.request.headers.get("range");
   return await makeRequest(ctx, `https://${s3Urls[type]}${fileName}${search}`, {
     headers: {
       "User-Agent": yandexUserAgent,
-      ...(range
-        ? {
-            Range: range,
-          }
-        : {}),
     },
   });
 }
