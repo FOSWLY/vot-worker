@@ -1,22 +1,29 @@
 import config from "./config";
 import { log } from "./logging";
 
-// eslint-disable-next-line prefer-const
-let { proxyList, forceUseProxy } = config;
+const { proxy: proxyData } = config;
 
 const getRandomProxy = () =>
   // eslint-disable-next-line sonarjs/pseudo-random
-  proxyList[Math.floor(Math.random() * proxyList.length)];
+  proxyData.list[Math.floor(Math.random() * proxyData.list.length)];
 
-async function makeRequest(url: string | URL, options: Record<any, any>) {
-  const proxy = proxyList.length ? getRandomProxy() : "";
+const getProxy = (isS3Request: boolean) => {
+  if (!proxyData.list.length || (isS3Request && proxyData.ignoreS3)) {
+    return "";
+  }
+
+  return getRandomProxy();
+};
+
+async function makeRequest(url: string | URL, options: Record<any, any>, isS3Request = false) {
+  const proxy = getProxy(isS3Request);
   const fetchOpts: FetchRequestInit = {
     ...options,
     proxy,
   };
   const logOpts = JSON.stringify(fetchOpts);
   try {
-    if (forceUseProxy && !proxy) {
+    if (!(isS3Request && proxyData.ignoreS3) && proxyData.force && !proxy) {
       throw new Error("Failed to find any available proxy");
     }
 
@@ -28,7 +35,7 @@ async function makeRequest(url: string | URL, options: Record<any, any>) {
     if (![200, 204, 206, 301, 304, 404].includes(response.status)) {
       const isCaptchaError = headers.has("x-yandex-captcha");
       if (isCaptchaError) {
-        proxyList = proxyList.filter((proxyItem) => proxyItem !== proxy);
+        proxyData.list = proxyData.list.filter((proxyItem) => proxyItem !== proxy);
       }
 
       log.error(
@@ -81,12 +88,22 @@ async function makeS3Request(
   search: string,
 ) {
   const url = `https://${config.s3Urls[type]}${fileName}?${search}`;
-  const response = await makeRequest(url, {
-    method: request.method,
-    headers: {
-      "User-Agent": config.userAgent,
+  const range = request.headers.get("range");
+  const response = await makeRequest(
+    url,
+    {
+      method: request.method,
+      headers: {
+        "User-Agent": config.userAgent,
+        ...(range
+          ? {
+              Range: range,
+            }
+          : {}),
+      },
     },
-  });
+    true,
+  );
 
   // remove repeatable field
   response.headers.delete("date");
@@ -97,40 +114,11 @@ async function makeS3Request(
     request.method === "HEAD"
   ) {
     response.headers.delete("content-encoding");
-    return new Response(request.method === "HEAD" ? null : response.body, {
-      headers: response.headers,
-      status: response.status,
-    });
   }
 
-  // https://github.com/oven-sh/bun/issues/10440
-  const opts = { code: 200, start: 0, end: Infinity, range: false };
-  const file = await Bun.readableStreamToBlob(response.body);
-
-  response.headers.set("Content-Length", "" + file.size);
-  if (request.headers.has("range")) {
-    opts.code = 206;
-    const [x, y] = request.headers.get("range")!.replace("bytes=", "").split("-");
-    const end = (opts.end = parseInt(y, 10) || file.size - 1);
-    const start = (opts.start = parseInt(x, 10) || 0);
-
-    if (start >= file.size || end >= file.size) {
-      response.headers.set("Content-Range", `bytes */${file.size}`);
-      return new Response(null, {
-        headers: response.headers,
-        status: 416,
-      });
-    }
-
-    response.headers.set("Content-Range", `bytes ${start}-${end}/${file.size}`);
-    response.headers.set("Content-Length", "" + (end - start + 1));
-    opts.range = true;
-  }
-
-  const blob = opts.range ? file.slice(opts.start, opts.end) : file;
-  return new Response(blob.stream(), {
+  return new Response(response.body, {
     headers: response.headers,
-    status: opts.code,
+    status: response.status,
   });
 }
 

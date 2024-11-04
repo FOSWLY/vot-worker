@@ -1,6 +1,6 @@
 {
   "name": "vot-worker",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "scripts": {
     "dev": "NODE_ENV=development bun run --watch src/index.ts",
     "start": "NODE_ENV=production bun src/index.ts",
@@ -19,9 +19,9 @@
     "@typescript-eslint/parser": "^8.11.0",
     "bun-types": "latest",
     "eslint": "^9.13.0",
-    "eslint-plugin-oxlint": "^0.10.1",
+    "eslint-plugin-oxlint": "^0.11.0",
     "eslint-plugin-sonarjs": "^2.0.4",
-    "oxlint": "^0.10.3",
+    "oxlint": "^0.11.0",
     "typescript-eslint": "^8.11.0"
   },
   "module": "src/index.js",
