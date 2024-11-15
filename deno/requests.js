@@ -1,4 +1,4 @@
-import { s3Urls, yandexUserAgent } from "./config.js";
+import { s3Urls, yandexUserAgent, corsHeaders } from "./config.js";
 const repeatableHeaders = ["date", ...Object.keys(corsHeaders)];
 
 async function makeRequest(ctx, url, options) {
