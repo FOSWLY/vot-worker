@@ -33,10 +33,10 @@ export default {
     },
   },
   cors: {
-    "Access-Control-Allow-Origin": "*",
-    "Access-Control-Allow-Headers": "*",
-    "Access-Control-Allow-Methods": "POST, GET, PUT, OPTIONS",
-    "Access-Control-Max-Age": "86400",
+    "access-control-allow-origin": "*",
+    "access-control-allow-headers": "*",
+    "access-control-allow-methods": "POST, GET, PUT, OPTIONS",
+    "access-control-max-age": "86400",
   },
   s3Urls: {
     audio: "vtrans.s3-private.mds.yandex.net/tts/prod/",

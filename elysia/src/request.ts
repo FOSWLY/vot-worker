@@ -2,6 +2,7 @@ import config from "./config";
 import { log } from "./logging";
 
 const { proxy: proxyData } = config;
+const repeatableHeaders = ["date", ...Object.keys(config.cors)];
 
 const getRandomProxy = () =>
   // eslint-disable-next-line sonarjs/pseudo-random
@@ -29,7 +30,10 @@ async function makeRequest(url: string | URL, options: Record<any, any>, isS3Req
 
     const response = await fetch(url, fetchOpts);
     response.headers.append("X-Yandex-Status", "success");
-    response.headers.delete("Access-Control-Allow-Origin");
+    for (const repeatableHeader of repeatableHeaders) {
+      response.headers.delete(repeatableHeader);
+    }
+
     const body = response.body;
     const headers = response.headers;
     if (![200, 204, 206, 301, 304, 404].includes(response.status)) {
@@ -105,8 +109,6 @@ async function makeS3Request(
     true,
   );
 
-  // remove repeatable field
-  response.headers.delete("date");
   if (
     type === "subs" ||
     !response.body ||

@@ -1,6 +1,6 @@
 // Original script: https://github.com/mynovelhost/voice-over-translation/blob/master/CloudflareWorker.js
 
-const version = "1.0.12";
+const version = "1.0.13";
 
 const yandexUserAgent =
   "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 YaBrowser/24.7.0.0 Safari/537.36";
@@ -58,9 +58,12 @@ function badRequestResponse() {
 async function makeRequest(request) {
   let response = await fetch(request);
   response = new Response(response.body, response);
-  response.headers.delete("Access-Control-Allow-Origin");
-  for (const corsHeaderKey of corsHeadersKeys)
+  response.headers.delete("date");
+  for (const corsHeaderKey of corsHeadersKeys) {
+    response.headers.delete(corsHeaderKey);
     response.headers.set(corsHeaderKey, corsHeaders[corsHeaderKey]);
+  }
+
   response.headers.set("X-Yandex-Status", "success");
   return response;
 }

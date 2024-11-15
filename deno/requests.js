@@ -1,11 +1,14 @@
 import { s3Urls, yandexUserAgent } from "./config.js";
+const repeatableHeaders = ["date", ...Object.keys(corsHeaders)];
 
 async function makeRequest(ctx, url, options) {
   const response = await fetch(url, options);
 
   ctx.response.status = response.status;
   ctx.response.body = response.body;
-  ctx.response.headers.delete("Access-Control-Allow-Origin");
+  for (const repeatableHeader of repeatableHeaders) {
+    ctx.response.headers.delete(repeatableHeader);
+  }
 
   for (const [name, value] of response.headers) {
     ctx.response.headers.append(name, value);
