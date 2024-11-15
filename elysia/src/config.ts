@@ -35,7 +35,7 @@ export default {
   cors: {
     "Access-Control-Allow-Origin": "*",
     "Access-Control-Allow-Headers": "*",
-    "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+    "Access-Control-Allow-Methods": "POST, GET, PUT, OPTIONS",
     "Access-Control-Max-Age": "86400",
   },
   s3Urls: {

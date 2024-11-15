@@ -1,6 +1,6 @@
 {
   "name": "vot-worker",
-  "version": "1.0.11",
+  "version": "1.0.12",
   "scripts": {
     "dev": "NODE_ENV=development bun run --watch src/index.ts",
     "start": "NODE_ENV=production bun src/index.ts",
