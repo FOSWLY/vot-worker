@@ -1,6 +1,6 @@
 const host = "0.0.0.0"; // 0.0.0.0 - for global access, localhost - for local access
 const port = 7699;
-const version = "1.0.13";
+const version = "1.0.14";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
