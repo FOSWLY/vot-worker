@@ -23,8 +23,9 @@ export default {
     ignoreS3: Bun.env.PROXY_IGNORE_S3 === "true",
   },
   logging: {
-    level: LoggerLevel.INFO,
+    level: Bun.env.NODE_ENV === "production" ? LoggerLevel.INFO : LoggerLevel.DEBUG,
     logPath: path.join(rootPath, "logs"),
+    logToFile: Bun.env.LOG_TO_FILE === "true",
     loki: {
       host: Bun.env.LOKI_HOST ?? "",
       user: Bun.env.LOKI_USER ?? "",

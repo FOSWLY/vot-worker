@@ -3,7 +3,7 @@ import { pino, type TransportMultiOptions, type TransportTargetOptions } from "p
 
 import config from "./config";
 
-const { loki } = config.logging;
+const { loki, logToFile } = config.logging;
 const startingDate = new Date().toISOString().split("T")[0];
 
 type PinoOpts = Parameters<typeof pino>[0] & {
@@ -33,13 +33,15 @@ opts.transport.targets.push({
   },
 });
 
-opts.transport.targets.push({
-  level: config.logging.level,
-  target: "pino/file",
-  options: {
-    destination: path.join(config.logging.logPath, `${startingDate}.log`),
-  },
-});
+if (logToFile) {
+  opts.transport.targets.push({
+    level: config.logging.level,
+    target: "pino/file",
+    options: {
+      destination: path.join(config.logging.logPath, `${startingDate}.log`),
+    },
+  });
+}
 
 if (loki.host) {
   opts.transport.targets.push({
