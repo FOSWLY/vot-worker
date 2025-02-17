@@ -1,0 +1,13 @@
+.vscode
+.git
+.gitignore
+.husky
+*.env
+
+logs/*
+tests/*
+
+Dockerfile
+docker-compose.yml
+
+ecosystem.config.json
