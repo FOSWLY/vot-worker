@@ -1,28 +1,27 @@
 {
   "name": "vot-worker",
-  "version": "1.0.14",
+  "version": "1.0.15",
   "scripts": {
     "dev": "NODE_ENV=development bun run --watch src/index.ts",
     "start": "NODE_ENV=production bun src/index.ts",
     "lint": "bunx oxlint --ignore-path=.oxlintignore && bunx eslint"
   },
   "dependencies": {
-    "elysia": "^1.1.23",
+    "elysia": "1.2.6",
     "elysia-http-status-code": "^1.0.9",
-    "pino": "^9.5.0",
-    "pino-loki": "^2.3.1",
-    "pino-pretty": "^11.3.0"
+    "pino": "^9.6.0",
+    "pino-loki": "^2.5.0",
+    "pino-pretty": "^13.0.0"
   },
   "devDependencies": {
     "@types/eslint__js": "^8.42.3",
-    "@typescript-eslint/eslint-plugin": "^8.11.0",
-    "@typescript-eslint/parser": "^8.11.0",
+    "@typescript-eslint/eslint-plugin": "^8.24.0",
+    "@typescript-eslint/parser": "^8.24.0",
     "bun-types": "latest",
-    "eslint": "^9.13.0",
-    "eslint-plugin-oxlint": "^0.11.0",
-    "eslint-plugin-sonarjs": "^2.0.4",
-    "oxlint": "^0.11.0",
-    "typescript-eslint": "^8.11.0"
+    "eslint": "^9.20.1",
+    "eslint-plugin-oxlint": "^0.15.1",
+    "oxlint": "^0.15.11",
+    "typescript-eslint": "^8.24.0"
   },
   "module": "src/index.js",
   "bun-create": {
