@@ -16,7 +16,7 @@ export default {
   hostname: "0.0.0.0",
   version,
   userAgent:
-    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 YaBrowser/24.7.0.0 Safari/537.36",
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 YaBrowser/25.2.0.0 Safari/537.36",
   proxy: {
     list: proxyList,
     force: Bun.env.PROXY_FORCE === "true",
@@ -36,7 +36,7 @@ export default {
   cors: {
     "access-control-allow-origin": "*",
     "access-control-allow-headers": "*",
-    "access-control-allow-methods": "POST, GET, PUT, OPTIONS",
+    "access-control-allow-methods": "POST, GET, PUT, HEAD, OPTIONS",
     "access-control-max-age": "86400",
   },
   s3Urls: {
