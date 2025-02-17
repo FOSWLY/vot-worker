@@ -1,7 +1,7 @@
 import { Elysia } from "elysia";
 import { HttpStatusCode } from "elysia-http-status-code";
 
-import * as fs from "fs";
+import fs from "node:fs/promises";
 
 import config from "./config";
 
@@ -13,8 +13,8 @@ import sessionController from "./controllers/session";
 import { log } from "./logging";
 import { ValidationRequestError } from "./errors";
 
-if (!fs.existsSync(config.logging.logPath)) {
-  fs.mkdirSync(config.logging.logPath, { recursive: true });
+if (config.logging.logToFile && !(await fs.exists(config.logging.logPath))) {
+  await fs.mkdir(config.logging.logPath, { recursive: true });
   log.info(`Created log directory`);
 }
 
