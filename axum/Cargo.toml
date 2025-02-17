@@ -1,0 +1,15 @@
+[package]
+name = "vot-worker"
+version = "1.0.15"
+edition = "2021"
+
+[dependencies]
+axum = { version = "0.8.1" }
+serde = { version = "1.0.217", features = ["derive"] }
+serde_json = "1.0.138"
+tokio = { version = "1.43.0", features = ["full"] }
+lazy_static = "1.5.0"
+reqwest = { version = "0.12.12", features = ["json"] }
+toml = "0.8.20"
+tower-http = { version = "0.6.2", features = ["cors"] }
+dotenv = "0.15.0"
