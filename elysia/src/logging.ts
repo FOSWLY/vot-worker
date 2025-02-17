@@ -24,7 +24,7 @@ const opts: PinoOpts = {
   },
 };
 
-// it may be higher level than global, but it cann't be lower
+// it may be higher level than global, but it can't be lower
 opts.transport.targets.push({
   level: config.logging.level,
   target: "pino-pretty",
