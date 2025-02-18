@@ -22,6 +22,9 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
 
+    - name: Change to elysia directory
+      run: cd elysia
+
     - name: Build
       run: |
         npm install
