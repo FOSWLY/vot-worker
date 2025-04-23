@@ -18,6 +18,20 @@ const videoTranslationRouter = new Router()
       headers
     );
   })
+  .post("/cache", async (ctx) => {
+    const [body, headers] = await validateJSONRequest(ctx);
+    if (!body || !headers) {
+      return errorResponse(ctx, "error-content");
+    }
+
+    // if the value is different from key:value, it will throw 500 error
+    return await makeRequestToYandex(
+      ctx,
+      "video-translation/cache",
+      body,
+      headers
+    );
+  })
   .put("/audio", async (ctx) => {
     const [body, headers] = await validateJSONRequest(ctx);
     if (!body || !headers) {

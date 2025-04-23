@@ -1,9 +1,9 @@
 // Original script: https://github.com/mynovelhost/voice-over-translation/blob/master/CloudflareWorker.js
 
-const version = "1.0.15";
+const version = "1.0.16";
 
 const yandexUserAgent =
-  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 YaBrowser/25.2.0.0 Safari/537.36";
+  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 YaBrowser/25.4.0.0 Safari/537.36";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -149,6 +149,7 @@ addEventListener("fetch", (event) => {
   if (
     [
       "/video-translation/translate",
+      "/video-translation/cache",
       "/video-subtitles/get-subtitles",
       "/stream-translation/translate-stream",
       "/stream-translation/ping-stream",

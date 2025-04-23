@@ -13,6 +13,10 @@ async fn post_vtrans_translate(headers: HeaderMap, body: String) -> impl IntoRes
     request_browser_bytes("/video-translation/translate", headers, body, Method::POST).await
 }
 
+async fn post_vtrans_cache(headers: HeaderMap, body: String) -> impl IntoResponse {
+    request_browser_bytes("/video-translation/cache", headers, body, Method::POST).await
+}
+
 async fn put_vtrans_audio(headers: HeaderMap, body: String) -> impl IntoResponse {
     request_browser_bytes("/video-translation/audio", headers, body, Method::PUT).await
 }
@@ -46,6 +50,7 @@ async fn head_audio_proxy(
 pub fn get_router() -> Router {
     Router::new()
         .route("/translate", post(post_vtrans_translate))
+        .route("/cache", post(post_vtrans_cache))
         .route("/audio", put(put_vtrans_audio))
         .route("/fail-audio-js", put(put_vtrans_fail_audio_js))
         .route("/audio-proxy/{*file_name}", get(get_audio_proxy))

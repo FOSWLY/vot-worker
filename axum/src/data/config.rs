@@ -36,6 +36,6 @@ lazy_static! {
         },
         s3_audio_url: "vtrans.s3-private.mds.yandex.net/tts/prod/".to_string(),
         s3_subs_url: "brosubs.s3-private.mds.yandex.net/vtrans/".to_string(),
-        user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 YaBrowser/25.2.0.0 Safari/537.36".to_string()
+        user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 YaBrowser/25.4.0.0 Safari/537.36".to_string()
     };
 }

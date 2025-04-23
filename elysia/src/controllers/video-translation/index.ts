@@ -38,6 +38,19 @@ export default new Elysia().group("/video-translation", (app) =>
         body: "proxy-model",
       },
     )
+    .post(
+      "/cache",
+      async ({ body }) => {
+        return await makeRequestToYandex(
+          "video-translation/cache",
+          new Uint8Array(body.body),
+          body.headers,
+        );
+      },
+      {
+        body: "proxy-model",
+      },
+    )
     .put(
       "/audio",
       async ({ body }) => {
