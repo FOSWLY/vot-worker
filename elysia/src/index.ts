@@ -1,8 +1,6 @@
 import { Elysia } from "elysia";
 import { HttpStatusCode } from "elysia-http-status-code";
 
-import fs from "node:fs/promises";
-
 import config from "./config";
 
 import healthController from "./controllers/health";
@@ -12,11 +10,6 @@ import videoSubtitlesController from "./controllers/video-subtitles";
 import sessionController from "./controllers/session";
 import { log } from "./logging";
 import { ValidationRequestError } from "./errors";
-
-if (config.logging.logToFile && !(await fs.exists(config.logging.logPath))) {
-  await fs.mkdir(config.logging.logPath, { recursive: true });
-  log.info(`Created log directory`);
-}
 
 const app = new Elysia()
   .use(HttpStatusCode())
@@ -46,7 +39,7 @@ const app = new Elysia()
     }
 
     return {
-      error: error.message,
+      error: (error as Error).message,
     };
   })
   .use(healthController)
