@@ -1,0 +1,3 @@
+name = "vot-new"
+main = "CloudflareWorker.js"
+compatibility_date = "2022-07-12"
