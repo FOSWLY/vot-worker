@@ -1,4 +1,4 @@
-import { Status } from "https://deno.land/x/oak@v12.6.1/mod.ts";
+import { Status } from "@oak/oak";
 
 function errorResponse(ctx, message) {
   ctx.response.status = Status.NoContent;

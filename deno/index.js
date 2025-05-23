@@ -1,6 +1,6 @@
-import { Application, Status } from "https://deno.land/x/oak@v12.6.1/mod.ts";
-import { corsHeaders, host, port } from "./config.js";
+import { Application, Status } from "@oak/oak";
 
+import { corsHeaders, host, port } from "./config.js";
 import mainRouter from "./routes/index.js";
 
 const app = new Application();
@@ -21,4 +21,5 @@ app.use(async (ctx, next) => {
 
 app.use(mainRouter.routes());
 
+console.log(`🐿️ Oak is running at ${host}:${port}`);
 await app.listen({ host, port });

@@ -1,4 +1,5 @@
-import { Router } from "https://deno.land/x/oak@v12.6.1/mod.ts";
+import { Router } from "@oak/oak";
+
 import { makeRequestToYandex, makeS3Request } from "../requests.js";
 import { errorResponse } from "../responses.js";
 import { validateJSONRequest } from "../validators.js";

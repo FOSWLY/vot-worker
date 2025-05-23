@@ -1,4 +1,4 @@
-import { Router } from "https://deno.land/x/oak@v12.6.1/mod.ts";
+import { Router } from "@oak/oak";
 
 import videoTranslationRouter from "./videoTranslation.js";
 import videoSubtitlesRouter from "./videoSubtitles.js";
