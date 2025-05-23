@@ -1,4 +1,4 @@
-use axum::{response::IntoResponse, routing::get, Json, Router};
+use axum::{Json, Router, response::IntoResponse, routing::get};
 
 use serde::Serialize;
 
@@ -6,8 +6,8 @@ use crate::data::config;
 
 #[derive(Serialize)]
 pub struct Health {
-    version: String,
     status: String,
+    version: String,
 }
 
 async fn get_health() -> impl IntoResponse {

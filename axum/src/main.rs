@@ -3,16 +3,49 @@ mod data;
 mod routes;
 mod utils;
 
-use axum::{http::Method, Router};
+use axum::{Router, http::Method};
 use dotenv::dotenv;
-use std::time::Duration;
+use std::{error::Error, time::Duration};
 use tower_http::cors::{Any, CorsLayer};
+use tracing::info;
+use tracing::level_filters::LevelFilter;
+use tracing_subscriber::fmt::Layer;
+use tracing_subscriber::layer::SubscriberExt;
+use tracing_subscriber::util::SubscriberInitExt;
+use url::Url;
 
 use crate::data::config::CONFIG;
+
+fn tracing_setup() -> Result<(), Box<dyn Error>> {
+    let loki_config = match &CONFIG.loki_config {
+        Some(loki_config) => loki_config,
+        None => {
+            tracing_subscriber::registry()
+                .with(LevelFilter::INFO)
+                .with(Layer::new())
+                .init();
+            return Ok(());
+        }
+    };
+    let (layer, task) = tracing_loki::builder()
+        .label("application", &loki_config.label)?
+        .label("service_name", &loki_config.label)?
+        .http_header("Authorization", &loki_config.auth)?
+        .build_url(Url::parse(&loki_config.host).unwrap())?;
+
+    tracing_subscriber::registry()
+        .with(LevelFilter::INFO)
+        .with(layer)
+        .with(Layer::new())
+        .init();
+    tokio::spawn(task);
+    Ok(())
+}
 
 #[tokio::main]
 async fn main() {
     dotenv().ok();
+    tracing_setup().ok();
 
     let health_router = routes::health::get_router();
     let session_router = routes::session::get_router();
@@ -42,6 +75,10 @@ async fn main() {
     let listener = tokio::net::TcpListener::bind(format!("{0}:{1}", CONFIG.hostname, CONFIG.port))
         .await
         .unwrap();
-    println!("🦀 Axum is running at {}", listener.local_addr().unwrap());
+    info!(
+        task = "startup",
+        "🦀 Axum is running at {}",
+        listener.local_addr().unwrap()
+    );
     axum::serve(listener, app).await.unwrap();
 }
