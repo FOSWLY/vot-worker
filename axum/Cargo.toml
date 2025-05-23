@@ -1,6 +1,6 @@
 [package]
 name = "vot-worker"
-version = "1.0.16"
+version = "1.0.17"
 edition = "2024"
 
 [dependencies]
@@ -11,7 +11,7 @@ tokio = { version = "1.45.0", features = ["full"] }
 lazy_static = "1.5.0"
 reqwest = { version = "0.12.15", features = ["json"] }
 toml = "0.8.22"
-tower-http = { version = "0.6.2", features = ["cors"] }
+tower-http = { version = "0.6.4", features = ["cors"] }
 dotenv = "0.15.0"
 tracing = "0.1.41"
 tracing-loki = "0.2"

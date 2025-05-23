@@ -1,6 +1,6 @@
 // Original script: https://github.com/mynovelhost/voice-over-translation/blob/master/CloudflareWorker.js
 
-const version = "1.0.16";
+const version = "1.0.17";
 
 const yandexUserAgent =
   "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 YaBrowser/25.4.0.0 Safari/537.36";
