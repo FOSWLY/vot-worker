@@ -4,9 +4,7 @@ import { log } from "./logging";
 const { proxy: proxyData } = config;
 const repeatableHeaders = ["date", ...Object.keys(config.cors)];
 
-const getRandomProxy = () =>
-  // eslint-disable-next-line sonarjs/pseudo-random
-  proxyData.list[Math.floor(Math.random() * proxyData.list.length)];
+const getRandomProxy = () => proxyData.list[Math.floor(Math.random() * proxyData.list.length)];
 
 const getProxy = (isS3Request: boolean) => {
   if (!proxyData.list.length || (isS3Request && proxyData.ignoreS3)) {

@@ -1,0 +1,10 @@
+{
+    "categories": {
+        "correctness": "error",
+        "perf": "error",
+        "suspicious": "warn"
+    },
+    "rules": {
+        "no-async-endpoint-handlers": "off"
+    }
+}
