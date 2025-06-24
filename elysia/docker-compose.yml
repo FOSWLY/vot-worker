@@ -1,0 +1,18 @@
+version: "3"
+
+services:
+  vot-worker:
+    build: .
+    container_name: vot-elysia-worker
+    restart: always
+    ports:
+      - "7699:3001"
+    networks:
+      - votw-net
+    # environment:
+    # LOKI_AUTH:
+    # LOKI_HOST:
+    # LOKI_LABEL:
+
+networks:
+  votw-net:
