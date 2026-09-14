@@ -1,10 +1,10 @@
 import { Elysia } from "elysia";
-import { makeRequestToYandex } from "../../request";
-import ProxyModel from "../../models/proxy.model";
+
+import { makeRequestToYandex } from "@/request";
+import { proxyModel } from "@/models/proxy.model";
 
 export default new Elysia().group("/stream-translation", (app) =>
   app
-    .use(ProxyModel)
     .post(
       "/translate-stream",
       async ({ body }) => {
@@ -15,7 +15,7 @@ export default new Elysia().group("/stream-translation", (app) =>
         );
       },
       {
-        body: "proxy-model",
+        body: proxyModel.proxyRequestBody,
       },
     )
     .post(
@@ -28,7 +28,7 @@ export default new Elysia().group("/stream-translation", (app) =>
         );
       },
       {
-        body: "proxy-model",
+        body: proxyModel.proxyRequestBody,
       },
     ),
 );

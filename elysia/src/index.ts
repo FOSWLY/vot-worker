@@ -1,15 +1,15 @@
 import { Elysia } from "elysia";
 import { HttpStatusCode } from "elysia-http-status-code";
 
-import config from "./config";
+import config from "@/config";
 
-import healthController from "./controllers/health";
-import videoTranslationController from "./controllers/video-translation";
-import streamTranslationController from "./controllers/stream-translation";
-import videoSubtitlesController from "./controllers/video-subtitles";
-import sessionController from "./controllers/session";
-import { log } from "./logging";
-import { ValidationRequestError } from "./errors";
+import healthController from "@/controllers/health";
+import videoTranslationController from "@/controllers/video-translation";
+import streamTranslationController from "@/controllers/stream-translation";
+import videoSubtitlesController from "@/controllers/video-subtitles";
+import sessionController from "@/controllers/session";
+import { log } from "@/logging";
+import { ValidationRequestError } from "@/errors";
 
 const app = new Elysia()
   .use(HttpStatusCode())
@@ -25,16 +25,17 @@ const app = new Elysia()
     switch (code) {
       case "NOT_FOUND":
         set.status = httpStatus.HTTP_204_NO_CONTENT;
+        set.headers["X-Yandex-Status"] = "error-path";
         return "";
       case "VALIDATION":
       case "VALIDATION_REQUEST_ERROR":
         set.status = httpStatus.HTTP_204_NO_CONTENT;
         set.headers["X-Yandex-Status"] =
-          (error as ValidationRequestError).data ?? code === "VALIDATION"
-            ? "error-content"
-            : "error-request";
+          (error as ValidationRequestError).data ??
+          (code === "VALIDATION" ? "error-content" : "error-request");
         return "";
       case "PARSE":
+        set.status = httpStatus.HTTP_400_BAD_REQUEST;
         return "Bad Request";
     }
 

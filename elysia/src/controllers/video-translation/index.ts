@@ -1,8 +1,9 @@
 import { Elysia } from "elysia";
-import { makeS3Request, makeRequestToYandex } from "../../request";
-import { ValidationRequestError } from "../../errors";
-import ProxyModel from "../../models/proxy.model";
-import { FileProxyOpts } from "../../types/requests";
+
+import { makeS3Request, makeRequestToYandex } from "@/request";
+import { ValidationRequestError } from "@/errors";
+import { proxyModel } from "@/models/proxy.model";
+import { FileProxyOpts } from "@/types/requests";
 
 async function audioProxy({ params, query, request }: FileProxyOpts) {
   const fileName = params["*"];
@@ -24,7 +25,6 @@ async function audioProxy({ params, query, request }: FileProxyOpts) {
 
 export default new Elysia().group("/video-translation", (app) =>
   app
-    .use(ProxyModel)
     .post(
       "/translate",
       async ({ body }) => {
@@ -35,7 +35,7 @@ export default new Elysia().group("/video-translation", (app) =>
         );
       },
       {
-        body: "proxy-model",
+        body: proxyModel.proxyRequestBody,
       },
     )
     .post(
@@ -48,7 +48,7 @@ export default new Elysia().group("/video-translation", (app) =>
         );
       },
       {
-        body: "proxy-model",
+        body: proxyModel.proxyRequestBody,
       },
     )
     .put(
@@ -62,7 +62,7 @@ export default new Elysia().group("/video-translation", (app) =>
         );
       },
       {
-        body: "proxy-model",
+        body: proxyModel.proxyRequestBody,
       },
     )
     .put(
@@ -71,18 +71,18 @@ export default new Elysia().group("/video-translation", (app) =>
         return await makeRequestToYandex(
           "video-translation/fail-audio-js",
           body.body,
-          body.headers,
+          { ...body.headers, "Content-Type": "application/json" },
           "PUT",
         );
       },
       {
-        body: "proxy-json-model",
+        body: proxyModel.proxyJsonRequestBody,
       },
     )
     .get("/audio-proxy/*", audioProxy, {
-      params: "proxy-file-model",
+      params: proxyModel.proxyFileParams,
     })
     .head("/audio-proxy/*", audioProxy, {
-      params: "proxy-file-model",
+      params: proxyModel.proxyFileParams,
     }),
 );

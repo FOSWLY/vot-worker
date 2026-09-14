@@ -1,6 +1,6 @@
 import { Elysia } from "elysia";
 
-import config from "../../config";
+import config from "@/config";
 
 export default new Elysia().group("/health", (app) =>
   app.get("/", () => ({

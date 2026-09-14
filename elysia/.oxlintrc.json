@@ -1,4 +1,5 @@
 {
+    "$schema": "./node_modules/oxlint/configuration_schema.json",
     "categories": {
         "correctness": "error",
         "perf": "error",
@@ -6,5 +7,10 @@
     },
     "rules": {
         "no-async-endpoint-handlers": "off"
-    }
+    },
+    "ignorePatterns": [
+        "**/*.d.ts",
+        "ecosystem.config.js"
+    ],
+    "plugins": ["promise", "import", "eslint", "oxc", "typescript", "unicorn"]
 }

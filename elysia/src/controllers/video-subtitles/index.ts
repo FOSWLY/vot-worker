@@ -1,8 +1,9 @@
 import { Elysia } from "elysia";
-import { makeS3Request, makeRequestToYandex } from "../../request";
-import ProxyModel from "../../models/proxy.model";
-import { ValidationRequestError } from "../../errors";
-import { FileProxyOpts } from "../../types/requests";
+
+import { makeS3Request, makeRequestToYandex } from "@/request";
+import { ValidationRequestError } from "@/errors";
+import { proxyModel } from "@/models/proxy.model";
+import { FileProxyOpts } from "@/types/requests";
 
 async function subtitlesProxy({ params, query, request }: FileProxyOpts) {
   const fileName = params["*"];
@@ -20,7 +21,6 @@ async function subtitlesProxy({ params, query, request }: FileProxyOpts) {
 
 export default new Elysia().group("/video-subtitles", (app) =>
   app
-    .use(ProxyModel)
     .post(
       "/get-subtitles",
       async ({ body }) => {
@@ -31,13 +31,13 @@ export default new Elysia().group("/video-subtitles", (app) =>
         );
       },
       {
-        body: "proxy-model",
+        body: proxyModel.proxyRequestBody,
       },
     )
     .get("/subtitles-proxy/*", subtitlesProxy, {
-      params: "proxy-file-model",
+      params: proxyModel.proxyFileParams,
     })
     .head("/subtitles-proxy/*", subtitlesProxy, {
-      params: "proxy-file-model",
+      params: proxyModel.proxyFileParams,
     }),
 );

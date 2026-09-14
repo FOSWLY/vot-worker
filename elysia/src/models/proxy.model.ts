@@ -1,17 +1,17 @@
-import Elysia, { t } from "elysia";
+import { t } from "elysia";
 
 const HeadersType = t.Record(t.String(), t.Any());
 
-export default new Elysia().model({
-  "proxy-model": t.Object({
+export const proxyModel = {
+  proxyRequestBody: t.Object({
     body: t.Array(t.Any()),
     headers: HeadersType,
   }),
-  "proxy-json-model": t.Object({
+  proxyJsonRequestBody: t.Object({
     body: t.String(),
     headers: HeadersType,
   }),
-  "proxy-file-model": t.Object({
+  proxyFileParams: t.Object({
     "*": t.String(),
   }),
-});
+};
