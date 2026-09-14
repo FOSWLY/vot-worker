@@ -60,3 +60,9 @@ sudo apt install build-essential pkg-config
    ```bash
    ./target/release/vot-worker
    ```
+
+## Переменные окружения
+
+| Переменная       | По умолчанию                   | Назначение                          |
+| ---------------- | ------------------------------ | ----------------------------------- |
+| `YANDEX_API_URL` | `https://api.browser.yandex.ru` | базовый URL Yandex API (upstream) |

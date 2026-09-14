@@ -1,9 +1,9 @@
 use axum::{
+    Router,
     extract::{Path, RawQuery},
     http::HeaderMap,
     response::IntoResponse,
     routing::{get, head, post, put},
-    Router,
 };
 use reqwest::Method;
 

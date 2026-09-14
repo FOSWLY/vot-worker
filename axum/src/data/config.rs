@@ -22,6 +22,7 @@ pub struct Config {
     pub version: String,
     pub hostname: String,
     pub port: u16,
+    pub yandex_api_url: String,
     pub s3_audio_url: String,
     pub s3_subs_url: String,
     pub user_agent: String,
@@ -41,9 +42,13 @@ lazy_static! {
             Ok(port) => port.parse().unwrap(),
             Err(_) => 7674,
         },
+        yandex_api_url: match env::var("YANDEX_API_URL") {
+            Ok(url) => url,
+            Err(_) => "https://api.browser.yandex.ru".to_string(),
+        },
         s3_audio_url: "vtrans.s3-private.mds.yandex.net/tts/prod/".to_string(),
         s3_subs_url: "brosubs.s3-private.mds.yandex.net/vtrans/".to_string(),
-        user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 YaBrowser/25.4.0.0 Safari/537.36".to_string(),
+        user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 YaBrowser/26.8.0.0 Safari/537.36".to_string(),
         loki_config: match env::var("LOKI_HOST") {
             Ok(loki_host) => Some(LokiConfig {
                 host: loki_host,

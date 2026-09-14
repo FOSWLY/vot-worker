@@ -59,6 +59,7 @@ async fn main() {
         .nest("/video-subtitles", vsubs_router)
         .nest("/stream-translation", strans_router)
         .fallback(routes::fallback::fallback)
+        .method_not_allowed_fallback(routes::fallback::method_not_allowed)
         .layer(
             CorsLayer::new()
                 .allow_headers(Any)

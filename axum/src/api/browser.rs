@@ -1,6 +1,6 @@
 use axum::{
     body::Body,
-    http::{HeaderMap, HeaderName, HeaderValue, Response},
+    http::{HeaderMap, HeaderName, HeaderValue, Response, header::CONTENT_TYPE},
 };
 use lazy_static::lazy_static;
 use reqwest::{Client, Error, Method, RequestBuilder};
@@ -34,7 +34,11 @@ pub fn build_bytes_client(
     method: Method,
 ) -> RequestBuilder {
     let is_get = method == Method::GET;
-    let request_url = format!("https://api.browser.yandex.ru{}", pathname);
+    let request_url = format!(
+        "{}{}",
+        CONFIG.yandex_api_url.trim_end_matches('/'),
+        pathname
+    );
     let headers = convert_headers(headers_data);
     let builder = REQ_CLIENT.request(method, &request_url).headers(headers);
     if is_get {
@@ -46,15 +50,20 @@ pub fn build_bytes_client(
 
 pub fn build_json_client(
     pathname: &str,
-    body: serde_json::Value,
+    body: String,
     headers_data: &Map<String, serde_json::Value>,
     method: Method,
 ) -> RequestBuilder {
     let is_get = method == Method::GET;
-    let request_url = format!("https://api.browser.yandex.ru{}", pathname);
-    let headers = convert_headers(headers_data);
+    let request_url = format!(
+        "{}{}",
+        CONFIG.yandex_api_url.trim_end_matches('/'),
+        pathname
+    );
+    let mut headers = convert_headers(headers_data);
+    headers.insert(CONTENT_TYPE, HeaderValue::from_static("application/json"));
     let builder = REQ_CLIENT.request(method, &request_url).headers(headers);
-    if is_get { builder } else { builder.json(&body) }
+    if is_get { builder } else { builder.body(body) }
 }
 
 pub fn build_s3_audio_client(
@@ -76,7 +85,12 @@ pub fn build_s3_audio_client(
     REQ_CLIENT.request(method, &request_url).headers(headers)
 }
 
-pub fn build_s3_subs_client(pathname: String, query: String, method: Method) -> RequestBuilder {
+pub fn build_s3_subs_client(
+    pathname: String,
+    query: String,
+    method: Method,
+    range: Option<&HeaderValue>,
+) -> RequestBuilder {
     let host = &CONFIG.s3_subs_url;
     let request_url = format!("https://{}{}?{}", host, pathname, query);
     let mut headers = HeaderMap::new();
@@ -84,14 +98,28 @@ pub fn build_s3_subs_client(pathname: String, query: String, method: Method) -> 
         "user-agent",
         HeaderValue::from_str(&CONFIG.user_agent).unwrap(),
     );
+    if let Some(r) = range {
+        headers.insert("range", r.clone());
+    }
     REQ_CLIENT.request(method, &request_url).headers(headers)
 }
 
-pub async fn request(client: RequestBuilder) -> Result<Response<Body>, Error> {
+pub async fn request(client: RequestBuilder, method: &Method) -> Result<Response<Body>, Error> {
     let res = client.send().await?;
     let status = res.status();
     let mut headers = res.headers().clone();
     headers.append("X-Yandex-Status", HeaderValue::from_str("success").unwrap());
+    for name in [
+        "date",
+        "upgrade",
+        "transfer-encoding",
+        "access-control-allow-origin",
+        "access-control-allow-headers",
+        "access-control-allow-methods",
+        "access-control-max-age",
+    ] {
+        headers.remove(name);
+    }
     if !&SUCCESS_STATUSES.contains(&status.as_u16()) {
         let orig_headers = res.headers();
         let is_captcha_error = &orig_headers.get("x-yandex-captcha").is_some();
@@ -108,8 +136,11 @@ pub async fn request(client: RequestBuilder) -> Result<Response<Body>, Error> {
         );
     };
 
-    let bytes = res.bytes().await?;
-    let mut response = Response::new(Body::from(bytes));
+    let mut response = Response::new(if method == Method::HEAD {
+        Body::empty()
+    } else {
+        Body::from_stream(res.bytes_stream())
+    });
     *response.status_mut() = status;
     *response.headers_mut() = headers;
     Ok(response)

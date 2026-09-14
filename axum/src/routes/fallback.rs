@@ -1,5 +1,11 @@
-use reqwest::StatusCode;
+use axum::{body::Body, http::Response};
 
-pub async fn fallback() -> (StatusCode, &'static str) {
-    (StatusCode::NO_CONTENT, "")
+use crate::utils::handlers::return_error;
+
+pub async fn fallback() -> Response<Body> {
+    return_error("error-path")
+}
+
+pub async fn method_not_allowed() -> Response<Body> {
+    return_error("error-path")
 }

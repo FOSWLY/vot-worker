@@ -1,9 +1,9 @@
 use axum::{
+    Router,
     extract::{Path, RawQuery},
     http::HeaderMap,
     response::IntoResponse,
     routing::{get, head, post},
-    Router,
 };
 use reqwest::Method;
 
@@ -19,12 +19,20 @@ async fn post_vsubs_get_subtitles(headers: HeaderMap, body: String) -> impl Into
     .await
 }
 
-async fn get_subs_proxy(Path(path): Path<String>, RawQuery(query): RawQuery) -> impl IntoResponse {
-    request_subs(path, query, Method::GET).await
+async fn get_subs_proxy(
+    headers: HeaderMap,
+    Path(path): Path<String>,
+    RawQuery(query): RawQuery,
+) -> impl IntoResponse {
+    request_subs(headers, path, query, Method::GET).await
 }
 
-async fn head_subs_proxy(Path(path): Path<String>, RawQuery(query): RawQuery) -> impl IntoResponse {
-    request_subs(path, query, Method::HEAD).await
+async fn head_subs_proxy(
+    headers: HeaderMap,
+    Path(path): Path<String>,
+    RawQuery(query): RawQuery,
+) -> impl IntoResponse {
+    request_subs(headers, path, query, Method::HEAD).await
 }
 
 pub fn get_router() -> Router {

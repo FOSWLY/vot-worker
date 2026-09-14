@@ -1,4 +1,4 @@
-use axum::{http::HeaderMap, response::IntoResponse, routing::post, Router};
+use axum::{Router, http::HeaderMap, response::IntoResponse, routing::post};
 use reqwest::Method;
 
 use crate::utils::handlers::request_browser_bytes;
