@@ -1,7 +1,8 @@
 # Cloudflare Worker
 
 > [!NOTE]
-> На момент написания инструкции, по неизвестной причине, запросы к cloudflare воркерам перестали проходить с российских айпи-адрессов. Рекомендую деплоить на Deno.
+>
+> > Не работает с российскими айпи-адресами. Если для вас это важно, рекомендуется использовать любой другой хостинг, который доступен в России
 
 ## Особенности
 
@@ -30,15 +31,14 @@ bun install
 bun run smoke -- --worker cloudflare
 ```
 
-Для ручного запуска dev-сервера нужен Node.js (вместе с ним ставится `npx`).
+Для ручного запуска dev-сервера нужен Node.js (вместе с ним ставится `npx`)
 Из директории `cloudflare`:
 
 ```bash
 npx --yes wrangler dev --local
 ```
 
-По умолчанию protobuf и fail-audio-js маршруты идут в `https://api.browser.yandex.ru`. Другой upstream задаётся переменной окружения
-воркера `env.YANDEX_API_URL` — например, для локального `mock-server`:
+По умолчанию protobuf и fail-audio-js маршруты идут в `https://api.browser.yandex.ru`. Другой upstream задаётся переменной окружения воркера `env.YANDEX_API_URL` — например, для локального `mock-server`:
 
 ```bash
 npx --yes wrangler dev --local --var YANDEX_API_URL:http://127.0.0.1:3001
