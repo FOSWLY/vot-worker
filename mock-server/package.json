@@ -1,0 +1,26 @@
+{
+  "name": "mock-server",
+  "module": "src/index.ts",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "start": "bun src/index.ts",
+    "dev": "bun --watch src/index.ts",
+    "smoke": "bun smoke/worker-smoke.ts",
+    "test": "bun test",
+    "typecheck": "bunx tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^7"
+  },
+  "dependencies": {
+    "@vot.js/core": "^3.0.4",
+    "@vot.js/node": "^3.0.4",
+    "@vot.js/shared": "^3.0.4",
+    "elysia": "^1.4.30",
+    "elysia-protobuf": "^2.0.0"
+  }
+}

@@ -1,0 +1,89 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 380" width="1200" height="380" role="img"
+  aria-labelledby="heroTitle heroDesc">
+  <title id="heroTitle">VOT Mock Server &#8212; local Yandex video translation API sandbox</title>
+  <desc id="heroDesc">Dark protocol-inspector hero. On the left, the title VOT MOCK SERVER above the promise Local
+    Yandex video translation API sandbox and the stack BUN &#183; ELYSIA &#183; PROTOBUF &#183; :3001, with the first
+    action bun run start on 127.0.0.1:3001. On the right, a signed-protobuf request and response trace with REQUEST and
+    RESPONSE columns: SESSION /session/create returns HTTP 200; TRANSLATE /video-translation/translate returns STATUS 6;
+    AUDIO /video-translation/audio returns STATUS 2; POLL /video-translation/translate returns STATUS 2; and READY
+    /video-translation/translate returns STATUS 1 with the returned url payload /tts/prod/&lt;uuid&gt;.mp3.</desc>
+
+  <!-- canvas -->
+  <rect x="0" y="0" width="1200" height="380" rx="24" fill="#0B0D10" />
+  <rect x="0.5" y="0.5" width="1199" height="379" rx="23.5" fill="none" stroke="#2A303A" stroke-width="1" />
+
+  <!-- identity -->
+  <g font-family="ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, &quot;Liberation Mono&quot;, monospace">
+    <rect x="56" y="56" width="10" height="10" rx="2" fill="#FF5C00" />
+    <text x="76" y="65" font-size="15" fill="#929AA8" letter-spacing="1.5">LOCAL SANDBOX</text>
+  </g>
+
+  <g font-family="-apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, &quot;Helvetica Neue&quot;, Arial, sans-serif"
+    fill="#F4F1EA">
+    <text x="56" y="132" font-size="58" font-weight="700" letter-spacing="-1.5">VOT MOCK</text>
+    <text x="56" y="192" font-size="58" font-weight="700" letter-spacing="-1.5">SERVER</text>
+    <text x="56" y="230" font-size="22" font-weight="400">Local Yandex video translation</text>
+    <text x="56" y="256" font-size="22" font-weight="400">API sandbox</text>
+  </g>
+
+  <g font-family="ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, &quot;Liberation Mono&quot;, monospace">
+    <text x="56" y="294" font-size="16" fill="#929AA8" letter-spacing="0.8">BUN &#183; ELYSIA &#183; PROTOBUF</text>
+    <circle cx="60" cy="330" r="4.5" fill="#52D6A3" />
+    <text x="74" y="336" font-size="16" fill="#F4F1EA" letter-spacing="0.4">bun run start <tspan fill="#929AA8">&#8594;
+        127.0.0.1:3001</tspan></text>
+  </g>
+
+  <!-- request / response wire trace panel -->
+  <rect x="500" y="56" width="644" height="296" rx="12" fill="#141820" stroke="#2A303A" stroke-width="1" />
+
+  <g font-family="ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, &quot;Liberation Mono&quot;, monospace">
+    <text x="532" y="88" font-size="15" fill="#929AA8" letter-spacing="1.2">WIRE TRACE</text>
+    <text x="1112" y="88" font-size="15" fill="#929AA8" text-anchor="end" letter-spacing="1.2">SIGNED PROTOBUF
+      FLOW</text>
+
+    <text x="532" y="118" font-size="15" fill="#929AA8" letter-spacing="1.2">REQUEST</text>
+    <text x="1112" y="118" font-size="15" fill="#929AA8" text-anchor="end" letter-spacing="1.2">RESPONSE</text>
+    <line x1="532" y1="127" x2="1112" y2="127" stroke="#2A303A" stroke-width="1" />
+
+    <!-- SESSION -> HTTP 200 -->
+    <text x="532" y="150" font-size="20" font-weight="600" fill="#F4F1EA" letter-spacing="0.5">SESSION</text>
+    <text x="648" y="150" font-size="16" fill="#929AA8">/session/create</text>
+    <line x1="934" y1="143" x2="982" y2="143" stroke="#FF5C00" stroke-width="2" />
+    <polygon points="980,138 992,143 980,148" fill="#FF5C00" />
+    <rect x="996" y="130" width="116" height="28" rx="8" fill="#1B2029" stroke="#2A303A" stroke-width="1" />
+    <text x="1054" y="150" font-size="20" font-weight="700" fill="#F4F1EA" text-anchor="middle">HTTP 200</text>
+
+    <!-- TRANSLATE -> STATUS 6 -->
+    <text x="532" y="188" font-size="20" font-weight="600" fill="#F4F1EA" letter-spacing="0.5">TRANSLATE</text>
+    <text x="648" y="188" font-size="16" fill="#929AA8">/video-translation/translate</text>
+    <line x1="934" y1="181" x2="982" y2="181" stroke="#FF5C00" stroke-width="2" />
+    <polygon points="980,176 992,181 980,186" fill="#FF5C00" />
+    <rect x="996" y="168" width="116" height="28" rx="8" fill="#1B2029" stroke="#2A303A" stroke-width="1" />
+    <text x="1054" y="188" font-size="20" font-weight="700" fill="#FF5C00" text-anchor="middle">STATUS 6</text>
+
+    <!-- AUDIO -> STATUS 2 -->
+    <text x="532" y="226" font-size="20" font-weight="600" fill="#F4F1EA" letter-spacing="0.5">AUDIO</text>
+    <text x="648" y="226" font-size="16" fill="#929AA8">/video-translation/audio</text>
+    <line x1="934" y1="219" x2="982" y2="219" stroke="#FF5C00" stroke-width="2" />
+    <polygon points="980,214 992,219 980,224" fill="#FF5C00" />
+    <rect x="996" y="206" width="116" height="28" rx="8" fill="#1B2029" stroke="#2A303A" stroke-width="1" />
+    <text x="1054" y="226" font-size="20" font-weight="700" fill="#FF5C00" text-anchor="middle">STATUS 2</text>
+
+    <!-- POLL -> STATUS 2 -->
+    <text x="532" y="264" font-size="20" font-weight="600" fill="#F4F1EA" letter-spacing="0.5">POLL</text>
+    <text x="648" y="264" font-size="16" fill="#929AA8">/video-translation/translate</text>
+    <line x1="934" y1="257" x2="982" y2="257" stroke="#FF5C00" stroke-width="2" />
+    <polygon points="980,252 992,257 980,262" fill="#FF5C00" />
+    <rect x="996" y="244" width="116" height="28" rx="8" fill="#1B2029" stroke="#2A303A" stroke-width="1" />
+    <text x="1054" y="264" font-size="20" font-weight="700" fill="#FF5C00" text-anchor="middle">STATUS 2</text>
+
+    <!-- READY poll -> STATUS 1 + returned url payload -->
+    <text x="532" y="302" font-size="20" font-weight="600" fill="#F4F1EA" letter-spacing="0.5">READY</text>
+    <text x="648" y="302" font-size="16" fill="#929AA8">/video-translation/translate</text>
+    <line x1="934" y1="295" x2="982" y2="295" stroke="#52D6A3" stroke-width="2" />
+    <polygon points="980,290 992,295 980,300" fill="#52D6A3" />
+    <rect x="996" y="282" width="116" height="28" rx="8" fill="#1B2029" stroke="#2A303A" stroke-width="1" />
+    <text x="1054" y="302" font-size="20" font-weight="700" fill="#52D6A3" text-anchor="middle">STATUS 1</text>
+    <text x="1112" y="330" font-size="15" fill="#929AA8" text-anchor="end">/tts/prod/&lt;uuid&gt;.mp3</text>
+  </g>
+</svg>
