@@ -24,6 +24,7 @@ export default defineConfig({
         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 YaBrowser/26.8.0.0 Safari/537.36",
       ),
     yandexApiUrl: t.string().default("https://api.browser.yandex.ru"),
+    serverId: t.string().default(""),
     proxy: {
       list: t.array(t.string()).default(proxyList),
       force: t.boolean().default(false),

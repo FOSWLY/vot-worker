@@ -25,7 +25,7 @@ VOT Worker - прокси-cервер, который служит для пол
 
 - Сайт: [render.com](https://render.com)
 - Цена: бесплатно
-- Запросы: 750 часов активности (100 GB трафика)
+- Запросы: 750 часов активности (5 GB трафика)
 
 ### Cloudflare
 
@@ -37,6 +37,19 @@ VOT Worker - прокси-cервер, который служит для пол
 - Сайт: [cloudflare.com](https://cloudflare.com)
 - Цена: бесплатно
 - Запросы: 100.000/день
+
+## 📡 Формат запросов (wire contract)
+
+Одинаков для всех трёх реализаций. Маршруты принимают два эквивалентных формата:
+
+1. Бинарный: `Content-Type: application/x-protobuf`,
+   1. body — исходные protobuf bytes
+   2. header `X-VOT-Headers` — заголовки запроса в формате `Base64(JSON.stringify(headers))`
+2. JSON (fallback для старых клиентов): `Content-Type: application/json`,
+   1. body `{"headers": {...}, "body": [...]}`
+
+- Отсутствующий/некорректный `X-VOT-Headers` — `204 X-Yandex-Status: error-request`. Неизвестный `Content-Type` — `204 error-content`, malformed JSON — `400 Bad Request`
+- `PUT /video-translation/fail-audio-js` остаётся только JSON
 
 ## 🧪 Тестирование
 

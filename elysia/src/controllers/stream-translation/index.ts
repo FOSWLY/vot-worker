@@ -1,34 +1,36 @@
 import { Elysia } from "elysia";
 
 import { makeRequestToYandex } from "@/request";
-import { proxyModel } from "@/models/proxy.model";
+import { resolveByteRouteBody } from "@/protobuf";
 
 export default new Elysia().group("/stream-translation", (app) =>
   app
     .post(
       "/translate-stream",
-      async ({ body }) => {
+      async ({ body, request }) => {
+        const resolved = resolveByteRouteBody(request, body);
         return await makeRequestToYandex(
           "stream-translation/translate-stream",
-          new Uint8Array(body.body),
-          body.headers,
+          resolved.bytes,
+          resolved.headers,
         );
       },
       {
-        body: proxyModel.proxyRequestBody,
+        parse: "arrayBuffer",
       },
     )
     .post(
       "/ping-stream",
-      async ({ body }) => {
+      async ({ body, request }) => {
+        const resolved = resolveByteRouteBody(request, body);
         return await makeRequestToYandex(
           "stream-translation/ping-stream",
-          new Uint8Array(body.body),
-          body.headers,
+          resolved.bytes,
+          resolved.headers,
         );
       },
       {
-        body: proxyModel.proxyRequestBody,
+        parse: "arrayBuffer",
       },
     ),
 );

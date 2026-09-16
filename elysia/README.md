@@ -38,5 +38,4 @@ bun start
 
 ## Переменные окружения
 
-Адрес Yandex API (upstream) задаётся переменной `YANDEX_API_URL`, по
-умолчанию `https://api.browser.yandex.ru`
+Адрес Yandex API (upstream) задаётся переменной `YANDEX_API_URL`, по умолчанию `https://api.browser.yandex.ru`

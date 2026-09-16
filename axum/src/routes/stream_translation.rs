@@ -1,9 +1,9 @@
-use axum::{Router, http::HeaderMap, response::IntoResponse, routing::post};
+use axum::{Router, body::Bytes, http::HeaderMap, response::IntoResponse, routing::post};
 use reqwest::Method;
 
 use crate::utils::handlers::request_browser_bytes;
 
-async fn post_strans_translate_stream(headers: HeaderMap, body: String) -> impl IntoResponse {
+async fn post_strans_translate_stream(headers: HeaderMap, body: Bytes) -> impl IntoResponse {
     request_browser_bytes(
         "/stream-translation/translate-stream",
         headers,
@@ -13,7 +13,7 @@ async fn post_strans_translate_stream(headers: HeaderMap, body: String) -> impl 
     .await
 }
 
-async fn post_strans_ping_stream(headers: HeaderMap, body: String) -> impl IntoResponse {
+async fn post_strans_ping_stream(headers: HeaderMap, body: Bytes) -> impl IntoResponse {
     request_browser_bytes(
         "/stream-translation/ping-stream",
         headers,

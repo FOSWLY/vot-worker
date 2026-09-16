@@ -30,6 +30,7 @@ import {
   WORKER_UPSTREAM_PORT,
   WORKER_UPSTREAM_URL,
   explicitWorker,
+  expectedServerId,
   f,
   mockDir,
   mockPort,
@@ -60,7 +61,9 @@ import {
   checkFailureFlow,
   checkHealth,
   checkNegativeRoutes,
+  checkNextWorkerFlow,
   checkNormalVideoFlow,
+  checkServerId,
   checkStreamAndPing,
   checkSubtitles,
   client,
@@ -226,14 +229,16 @@ async function run(): Promise<void> {
         SERVICE_HOST: "127.0.0.1",
         SERVICE_PORT: String(workerPort),
         YANDEX_API_URL: WORKER_UPSTREAM_URL,
+        ...(expectedServerId === undefined ? {} : { SERVER_ID: expectedServerId }),
       });
     } else if (workerKind === "cloudflare") {
-      workerChild = startCloudflareWorker();
+      workerChild = startCloudflareWorker(expectedServerId);
     } else {
       workerChild = startService("worker", workerDir, {
         SERVICE_PORT: String(workerPort),
         NODE_ENV: "production",
         YANDEX_API_URL: WORKER_UPSTREAM_URL,
+        ...(expectedServerId === undefined ? {} : { SERVER_ID: expectedServerId }),
       });
     }
   }
@@ -244,6 +249,7 @@ async function run(): Promise<void> {
   console.log(`${f.accent(SYM.arrow)} ${f.accent("smoke")} running scenarios`);
 
   await scenario("health", checkHealth);
+  await scenario("server id header", () => checkServerId(expectedServerId));
 
   let sessionReady = false;
   await scenario("session: create + decode", async () => {
@@ -258,6 +264,7 @@ async function run(): Promise<void> {
   const secEnabled = spawnMode ? true : await secValidationEnabled().catch(() => false);
 
   if (sessionReady) {
+    await scenario("next worker provider: protobuf + X-VOT-Headers", checkNextWorkerFlow);
     await scenario("video flow: processing -> done", checkNormalVideoFlow);
     await scenario("video flow: waiting -> upload -> processing -> done", checkAudioGatedFlow);
     await scenario("cache: default ready + cloning waiting", checkCache);

@@ -1,5 +1,6 @@
 use axum::{
     Router,
+    body::Bytes,
     extract::{Path, RawQuery},
     http::HeaderMap,
     response::IntoResponse,
@@ -9,15 +10,15 @@ use reqwest::Method;
 
 use crate::utils::handlers::{request_audio, request_browser_bytes, request_browser_json};
 
-async fn post_vtrans_translate(headers: HeaderMap, body: String) -> impl IntoResponse {
+async fn post_vtrans_translate(headers: HeaderMap, body: Bytes) -> impl IntoResponse {
     request_browser_bytes("/video-translation/translate", headers, body, Method::POST).await
 }
 
-async fn post_vtrans_cache(headers: HeaderMap, body: String) -> impl IntoResponse {
+async fn post_vtrans_cache(headers: HeaderMap, body: Bytes) -> impl IntoResponse {
     request_browser_bytes("/video-translation/cache", headers, body, Method::POST).await
 }
 
-async fn put_vtrans_audio(headers: HeaderMap, body: String) -> impl IntoResponse {
+async fn put_vtrans_audio(headers: HeaderMap, body: Bytes) -> impl IntoResponse {
     request_browser_bytes("/video-translation/audio", headers, body, Method::PUT).await
 }
 

@@ -22,6 +22,7 @@ pub struct Config {
     pub version: String,
     pub hostname: String,
     pub port: u16,
+    pub server_id: Option<String>,
     pub yandex_api_url: String,
     pub s3_audio_url: String,
     pub s3_subs_url: String,
@@ -42,6 +43,7 @@ lazy_static! {
             Ok(port) => port.parse().unwrap(),
             Err(_) => 7674,
         },
+        server_id: env::var("SERVER_ID").ok().filter(|id| !id.is_empty()),
         yandex_api_url: match env::var("YANDEX_API_URL") {
             Ok(url) => url,
             Err(_) => "https://api.browser.yandex.ru".to_string(),

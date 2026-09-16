@@ -1,5 +1,6 @@
 use axum::{
     Router,
+    body::Bytes,
     extract::{Path, RawQuery},
     http::HeaderMap,
     response::IntoResponse,
@@ -9,7 +10,7 @@ use reqwest::Method;
 
 use crate::utils::handlers::{request_browser_bytes, request_subs};
 
-async fn post_vsubs_get_subtitles(headers: HeaderMap, body: String) -> impl IntoResponse {
+async fn post_vsubs_get_subtitles(headers: HeaderMap, body: Bytes) -> impl IntoResponse {
     request_browser_bytes(
         "/video-subtitles/get-subtitles",
         headers,

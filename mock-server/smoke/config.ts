@@ -20,6 +20,7 @@ const parsed = parseArgs({
     "worker-port": { type: "string" },
     "mock-url": { type: "string" },
     "worker-url": { type: "string" },
+    "server-id": { type: "string" },
   },
   strict: true,
 });
@@ -59,6 +60,14 @@ export const workerUrl = setting("worker-url", "WORKER_URL") ?? `http://127.0.0.
 export const mockUrl = setting("mock-url", "MOCK_URL") ?? `http://127.0.0.1:${mockPort}`;
 export const timeoutMs = Number(Bun.env.SMOKE_TIMEOUT_MS ?? 15000);
 
+// `X-VOT-SERVER-ID` scenario: spawn mode starts every worker with this id, so
+// the header is asserted on success and error responses. With `--no-spawn` the
+// running worker decides: pass `--server-id`/`SERVER_ID` to assert a value,
+// otherwise absence is asserted.
+export const spawnServerId = "smoke-server-id";
+export const expectedServerId =
+  setting("server-id", "SERVER_ID") ?? (spawnMode ? spawnServerId : undefined);
+
 // Workers read their Yandex upstream from `YANDEX_API_URL` (production
 // default `https://api.browser.yandex.ru`), so a spawned mock must listen
 // exactly there.
@@ -69,9 +78,6 @@ export const smokeDir = resolve(import.meta.dir);
 export const mockDir = resolve(smokeDir, "..");
 export const workerDir = resolve(mockDir, "..", workerKind);
 
-// Invalid outer payload: Elysia's schema validation answers `error-content`,
-// while Axum and Cloudflare parse the JSON and reject the missing envelope with
-// `error-request`. All are HTTP 204; only the selected worker's value is valid.
-export const invalidPayloadStatus = workerKind === "elysia" ? "error-content" : "error-request";
+export const invalidPayloadStatus = "error-request";
 
 export const FAILED_MESSAGE = "Возникла ошибка при переводе, попробуйте позже";

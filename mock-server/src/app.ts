@@ -40,9 +40,7 @@ function logAccess(request: Request, status: number): void {
     console.log(`[mock-server] ${pathname} ${status}`);
     return;
   }
-  console.log(
-    `  ${f.dim(SYM.arrow)} ${f.accent(request.method)} ${pathname} ${f.status(status)}`,
-  );
+  console.log(`  ${f.dim(SYM.arrow)} ${f.accent(request.method)} ${pathname} ${f.status(status)}`);
 }
 
 // Preflight defaults. No `access-control-allow-credentials`: the mock is fully
@@ -320,18 +318,14 @@ export function buildApp() {
           beforeHandle: guard({ secType: "Vtrans" }),
         },
       )
-      .post(
-        "/stream-translation/ping-stream",
-        () => protos.StreamPingRequest.fromPartial({}),
-        {
-          parse: "protobuf",
-          body: TProtobuf(protos.StreamPingRequest),
-          // No ping response schema exists in shared: an empty request message
-          // encodes to zero bytes, which is exactly the empty protobuf reply.
-          response: TProtobuf(protos.StreamPingRequest),
-          beforeHandle: guard({ secType: "Vtrans" }),
-        },
-      )
+      .post("/stream-translation/ping-stream", () => protos.StreamPingRequest.fromPartial({}), {
+        parse: "protobuf",
+        body: TProtobuf(protos.StreamPingRequest),
+        // No ping response schema exists in shared: an empty request message
+        // encodes to zero bytes, which is exactly the empty protobuf reply.
+        response: TProtobuf(protos.StreamPingRequest),
+        beforeHandle: guard({ secType: "Vtrans" }),
+      })
       .all("/stream-translation/stream-proxy/mock.m3u8", ({ request }) => {
         // A static route's HEAD goes through Elysia's generated fallback, which
         // measures the returned body with getResponseLength before discarding it.

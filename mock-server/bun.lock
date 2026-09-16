@@ -5,9 +5,9 @@
     "": {
       "name": "mock-server",
       "dependencies": {
-        "@vot.js/core": "^3.0.4",
-        "@vot.js/node": "^3.0.4",
-        "@vot.js/shared": "^3.0.4",
+        "@vot.js/core": "^3.1.0",
+        "@vot.js/node": "^3.1.0",
+        "@vot.js/shared": "^3.1.0",
         "elysia": "^1.4.30",
         "elysia-protobuf": "^2.0.0",
       },
@@ -15,7 +15,7 @@
         "@types/bun": "latest",
       },
       "peerDependencies": {
-        "typescript": "^7",
+        "typescript": "^7.0.2",
       },
     },
   },
@@ -74,11 +74,11 @@
 
     "@typescript/typescript-win32-x64": ["@typescript/typescript-win32-x64@7.0.2", "", { "os": "win32", "cpu": "x64" }, "sha512-0BQ3HkAHHlKLSp1qRvf3SUhGpGsDuhB/jgFw75guyqbxJqEaS0Cw/VFO8i2nHglJUzQCRtMMR/IBAKE3ETMC4g=="],
 
-    "@vot.js/core": ["@vot.js/core@3.0.4", "", { "dependencies": { "@vot.js/shared": "^3.0.4" }, "peerDependencies": { "typescript": "^6.0.0" } }, "sha512-xGKvTOPBD9XedyyAvZ98si4weOlr7/qfetXOj95RfkDDDdDQkXum8MYXjnnMmMSEANwRnLH4V7hdewiumFUpMw=="],
+    "@vot.js/core": ["@vot.js/core@3.1.0", "", { "dependencies": { "@vot.js/shared": "^3.1.0" }, "peerDependencies": { "typescript": "^6.0.0" } }, "sha512-bbcOdkVinshfq63ryp1oS+4CD9slmtJVKAKBB3qJ+Tb7Ve4I4WLOobMJgrh9YhB8dtg03Zly9X+YHVT+/bA8XQ=="],
 
-    "@vot.js/node": ["@vot.js/node@3.0.4", "", { "dependencies": { "@vot.js/core": "^3.0.4", "@vot.js/shared": "^3.0.4", "dom-parser": "^1.1.5", "undici": "^8.7.0" }, "peerDependencies": { "typescript": "^6.0.0" } }, "sha512-Yls3Z9uFH5Gby899VPMc/Qhu8a4j8sQpaB4ukc2IWnDDMwdt9J7Uw9OFL+q52o0S7F3sEu2nxtqKqJN1oeBGVA=="],
+    "@vot.js/node": ["@vot.js/node@3.1.0", "", { "dependencies": { "@vot.js/core": "^3.1.0", "@vot.js/shared": "^3.1.0", "dom-parser": "^1.1.5", "undici": "^8.7.0" }, "peerDependencies": { "typescript": "^6.0.0" } }, "sha512-2zcsZJFuaP0Ram5wn2FE4i/PkxCHzdmF0VKlXrh+StlPdJQ2Vslo8F7iyYaokxoHmxmj/UjN0TE9OvpHSDd+SQ=="],
 
-    "@vot.js/shared": ["@vot.js/shared@3.0.4", "", { "dependencies": { "@bufbuild/protobuf": "^2.0.0" }, "peerDependencies": { "typescript": "^6.0.0" } }, "sha512-b1ozQ7nH92vR+TEoT0eV9OXX3OErNFCl8D1Q6moeyXsgSzI4iOy7fzOjsKiAkocXNKTtFsJTMypUwPAHyjPuEQ=="],
+    "@vot.js/shared": ["@vot.js/shared@3.1.0", "", { "dependencies": { "@bufbuild/protobuf": "^2.0.0" }, "peerDependencies": { "typescript": "^6.0.0" } }, "sha512-rjuPIPfh2vaZz4D6gB5xwVtM4VX3tmEUA7rESRuY2NJhi8llvKy4akhEyv/smyKKYFhyCQNS9d5PgJ8+Xr7DaA=="],
 
     "bun-types": ["bun-types@1.4.2", "", { "dependencies": { "@types/node": "*" } }, "sha512-bxV1FgK7yBIzjRe5zBozIM4Bem11ZJcCXSrjWRG3YWLt8yFDePu4cLjpebO8OvPeIE9trbyPF4fuj3Cia4Fj3w=="],
 

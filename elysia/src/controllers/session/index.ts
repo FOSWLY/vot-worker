@@ -1,16 +1,17 @@
 import { Elysia } from "elysia";
 
 import { makeRequestToYandex } from "@/request";
-import { proxyModel } from "@/models/proxy.model";
+import { resolveByteRouteBody } from "@/protobuf";
 
 export default new Elysia().group("/session", (app) =>
   app.post(
     "/create",
-    async ({ body }) => {
-      return await makeRequestToYandex("session/create", new Uint8Array(body.body), body.headers);
+    async ({ body, request }) => {
+      const resolved = resolveByteRouteBody(request, body);
+      return await makeRequestToYandex("session/create", resolved.bytes, resolved.headers);
     },
     {
-      body: proxyModel.proxyRequestBody,
+      parse: "arrayBuffer",
     },
   ),
 );

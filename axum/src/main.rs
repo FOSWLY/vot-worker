@@ -3,7 +3,13 @@ mod data;
 mod routes;
 mod utils;
 
-use axum::{Router, http::Method};
+use axum::{
+    Router,
+    extract::Request,
+    http::{HeaderValue, Method},
+    middleware::{self, Next},
+    response::Response,
+};
 use dotenv::dotenv;
 use std::{error::Error, time::Duration};
 use tower_http::cors::{Any, CorsLayer};
@@ -15,6 +21,21 @@ use tracing_subscriber::util::SubscriberInitExt;
 use url::Url;
 
 use crate::data::config::CONFIG;
+
+// Infallible: an invalid header value only means no header, never a failed request.
+fn insert_server_id<B>(response: &mut Response<B>, server_id: Option<&str>) {
+    if let Some(server_id) = server_id {
+        if let Ok(value) = HeaderValue::from_str(server_id) {
+            response.headers_mut().insert("X-VOT-SERVER-ID", value);
+        }
+    }
+}
+
+async fn server_id_header(request: Request, next: Next) -> Response {
+    let mut response = next.run(request).await;
+    insert_server_id(&mut response, CONFIG.server_id.as_deref());
+    response
+}
 
 fn tracing_setup() -> Result<(), Box<dyn Error>> {
     let loki_config = match &CONFIG.loki_config {
@@ -72,7 +93,10 @@ async fn main() {
                     Method::OPTIONS,
                 ])
                 .max_age(Duration::from_secs(86400)),
-        );
+        )
+        // Outermost so even CORS preflight (which the inner layer short-circuits)
+        // and the fallback/405 responses carry the header.
+        .layer(middleware::from_fn(server_id_header));
     let listener = tokio::net::TcpListener::bind(format!("{0}:{1}", CONFIG.hostname, CONFIG.port))
         .await
         .unwrap();
@@ -82,4 +106,21 @@ async fn main() {
         listener.local_addr().unwrap()
     );
     axum::serve(listener, app).await.unwrap();
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use axum::body::Body;
+
+    #[test]
+    fn server_id_header_present_only_when_configured() {
+        let mut with_id = Response::new(Body::empty());
+        insert_server_id(&mut with_id, Some("node-1"));
+        assert_eq!(with_id.headers()["x-vot-server-id"], "node-1");
+
+        let mut without_id = Response::new(Body::empty());
+        insert_server_id(&mut without_id, None);
+        assert!(without_id.headers().get("x-vot-server-id").is_none());
+    }
 }

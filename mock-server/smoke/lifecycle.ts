@@ -161,7 +161,7 @@ function withLoopbackNoProxy(env: Record<string, string>): Record<string, string
 // config/cwd, bound to loopback in a non-interactive session, and inject the
 // mock address as `env.YANDEX_API_URL` (`--var KEY:VALUE`, so the `:` in the
 // URL survives).
-export function startCloudflareWorker(): Bun.Subprocess {
+export function startCloudflareWorker(serverId?: string): Bun.Subprocess {
   const npx = Bun.which("npx");
   if (!npx) {
     const node = Bun.which("node");
@@ -197,6 +197,7 @@ export function startCloudflareWorker(): Bun.Subprocess {
       "error",
       "--var",
       `YANDEX_API_URL:${WORKER_UPSTREAM_URL}`,
+      ...(serverId === undefined ? [] : ["--var", `SERVER_ID:${serverId}`]),
     ],
     {
       cwd: workerDir,

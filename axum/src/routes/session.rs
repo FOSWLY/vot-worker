@@ -1,10 +1,10 @@
-use axum::{Router, http::HeaderMap, response::IntoResponse, routing::post};
+use axum::{Router, body::Bytes, http::HeaderMap, response::IntoResponse, routing::post};
 
 use reqwest::Method;
 
 use crate::utils::handlers::request_browser_bytes;
 
-async fn post_session_create(headers: HeaderMap, body: String) -> impl IntoResponse {
+async fn post_session_create(headers: HeaderMap, body: Bytes) -> impl IntoResponse {
     request_browser_bytes("/session/create", headers, body, Method::POST).await
 }
 

@@ -3,6 +3,7 @@ import { Elysia } from "elysia";
 import { makeS3Request, makeRequestToYandex } from "@/request";
 import { ValidationRequestError } from "@/errors";
 import { proxyModel } from "@/models/proxy.model";
+import { resolveByteRouteBody } from "@/protobuf";
 import { FileProxyOpts } from "@/types/requests";
 
 async function subtitlesProxy({ params, query, request }: FileProxyOpts) {
@@ -23,15 +24,16 @@ export default new Elysia().group("/video-subtitles", (app) =>
   app
     .post(
       "/get-subtitles",
-      async ({ body }) => {
+      async ({ body, request }) => {
+        const resolved = resolveByteRouteBody(request, body);
         return await makeRequestToYandex(
           "video-subtitles/get-subtitles",
-          new Uint8Array(body.body),
-          body.headers,
+          resolved.bytes,
+          resolved.headers,
         );
       },
       {
-        body: proxyModel.proxyRequestBody,
+        parse: "arrayBuffer",
       },
     )
     .get("/subtitles-proxy/*", subtitlesProxy, {

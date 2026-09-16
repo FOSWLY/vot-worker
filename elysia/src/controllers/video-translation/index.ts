@@ -3,6 +3,7 @@ import { Elysia } from "elysia";
 import { makeS3Request, makeRequestToYandex } from "@/request";
 import { ValidationRequestError } from "@/errors";
 import { proxyModel } from "@/models/proxy.model";
+import { resolveByteRouteBody, resolveFailAudioJsBody } from "@/protobuf";
 import { FileProxyOpts } from "@/types/requests";
 
 async function audioProxy({ params, query, request }: FileProxyOpts) {
@@ -27,56 +28,60 @@ export default new Elysia().group("/video-translation", (app) =>
   app
     .post(
       "/translate",
-      async ({ body }) => {
+      async ({ body, request }) => {
+        const resolved = resolveByteRouteBody(request, body);
         return await makeRequestToYandex(
           "video-translation/translate",
-          new Uint8Array(body.body),
-          body.headers,
+          resolved.bytes,
+          resolved.headers,
         );
       },
       {
-        body: proxyModel.proxyRequestBody,
+        parse: "arrayBuffer",
       },
     )
     .post(
       "/cache",
-      async ({ body }) => {
+      async ({ body, request }) => {
+        const resolved = resolveByteRouteBody(request, body);
         return await makeRequestToYandex(
           "video-translation/cache",
-          new Uint8Array(body.body),
-          body.headers,
+          resolved.bytes,
+          resolved.headers,
         );
       },
       {
-        body: proxyModel.proxyRequestBody,
+        parse: "arrayBuffer",
       },
     )
     .put(
       "/audio",
-      async ({ body }) => {
+      async ({ body, request }) => {
+        const resolved = resolveByteRouteBody(request, body);
         return await makeRequestToYandex(
           "video-translation/audio",
-          new Uint8Array(body.body),
-          body.headers,
+          resolved.bytes,
+          resolved.headers,
           "PUT",
         );
       },
       {
-        body: proxyModel.proxyRequestBody,
+        parse: "arrayBuffer",
       },
     )
     .put(
       "/fail-audio-js",
-      async ({ body }) => {
+      async ({ body, request }) => {
+        const resolved = resolveFailAudioJsBody(request, body);
         return await makeRequestToYandex(
           "video-translation/fail-audio-js",
-          body.body,
-          { ...body.headers, "Content-Type": "application/json" },
+          resolved.body,
+          resolved.headers,
           "PUT",
         );
       },
       {
-        body: proxyModel.proxyJsonRequestBody,
+        parse: "arrayBuffer",
       },
     )
     .get("/audio-proxy/*", audioProxy, {

@@ -4,7 +4,7 @@
 
 import VOTClient from "@vot.js/node";
 import { VOTJSError } from "@vot.js/core";
-import { VOTWorkerProvider } from "@vot.js/core/providers/votworker";
+import { VOTNextWorkerProvider, VOTWorkerProvider } from "@vot.js/core/providers/votworker";
 import { YandexVOTProtobuf } from "@vot.js/core/protobuf";
 import type { VideoData } from "@vot.js/core/types/client";
 
@@ -16,10 +16,17 @@ import { SYM } from "../src/log.ts";
 // collisions between runs.
 const runId = crypto.randomUUID().slice(0, 8);
 
-// Single client for all functional scenarios: the provider signs protobuf
-// requests and decodes responses, so no manual encode/decode/signature code.
+// Providers sign protobuf requests and decode responses, so no manual
+// encode/decode/signature code is needed.
 export const client = new VOTClient({
   provider: VOTWorkerProvider,
+  host: workerUrl,
+  requestLang: "en",
+  responseLang: "ru",
+});
+
+const nextClient = new VOTClient({
+  provider: VOTNextWorkerProvider,
   host: workerUrl,
   requestLang: "en",
   responseLang: "ru",
@@ -91,6 +98,24 @@ export async function checkHealth(): Promise<void> {
   assert(typeof body.version === "string" && body.version.length > 0, "health version is present");
 }
 
+// Success (`/health`), fallback (`/__smoke_missing__`) and method-mismatch
+// responses must all carry the exact id, or none must when SERVER_ID is unset.
+export async function checkServerId(expected: string | undefined): Promise<void> {
+  const requests: Array<[string, Promise<Response>]> = [
+    ["health", fetch(`${workerUrl}/health`)],
+    ["unknown route", fetch(`${workerUrl}/__smoke_missing__`)],
+    ["method not allowed", fetch(`${workerUrl}/health`, { method: "DELETE" })],
+  ];
+  for (const [name, request] of requests) {
+    const header = (await request).headers.get("x-vot-server-id");
+    if (expected === undefined) {
+      assert(header === null, `${name}: no X-VOT-SERVER-ID without SERVER_ID (got ${header})`);
+    } else {
+      assert(header === expected, `${name}: X-VOT-SERVER-ID is ${header}, expected ${expected}`);
+    }
+  }
+}
+
 export async function checkNormalVideoFlow(): Promise<void> {
   const url = `https://www.youtube.com/watch?v=smoke-normal-${runId}`;
   const first = await client.translateVideo({ videoData: vd(url) });
@@ -103,6 +128,12 @@ export async function checkNormalVideoFlow(): Promise<void> {
     typeof done.url === "string" && done.url.endsWith(".mp3"),
     "normal done url ends with .mp3",
   );
+}
+
+export async function checkNextWorkerFlow(): Promise<void> {
+  const url = `https://www.youtube.com/watch?v=smoke-next-${runId}`;
+  const result = await nextClient.translateVideo({ videoData: vd(url) });
+  assert(result.status === 2, `next provider status is ${result.status}, expected 2 (processing)`);
 }
 
 export async function checkAudioGatedFlow(): Promise<void> {

@@ -3,3 +3,9 @@ export class ValidationRequestError extends Error {
     super("Failed to validate request");
   }
 }
+
+export class BadRequestError extends Error {
+  constructor() {
+    super("Bad Request");
+  }
+}
